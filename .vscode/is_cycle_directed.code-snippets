@@ -1,0 +1,35 @@
+{
+  "func": {
+    "prefix": "func",
+    "body": [
+      "pub fn func() {",
+      "    return;",
+      "}"
+    ]
+  },
+  "is_cycle_directed": {
+    "prefix": "is_cycle_directed",
+    "body": [
+      "fn is_cycle_directed(",
+      "    cpos: usize,",
+      "    uv: &Vec<Vec<usize>>,",
+      "    used: &mut Vec<bool>,",
+      "    finished: &mut Vec<bool>,",
+      ") -> bool {",
+      "    let mut ret = false;",
+      "    used[cpos] = true;",
+      "    for &npos in &uv[cpos] {",
+      "        if finished[npos] {",
+      "            continue;",
+      "        }",
+      "        if used[npos] {",
+      "            return true;",
+      "        }",
+      "        ret |= is_cycle_directed(npos, uv, used, finished);",
+      "    }",
+      "    finished[cpos] = true;",
+      "    ret",
+      "}"
+    ]
+  }
+}

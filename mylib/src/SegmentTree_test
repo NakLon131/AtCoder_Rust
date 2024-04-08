@@ -1,0 +1,75 @@
+use cargo_snippet::snippet;
+
+#[snippet]
+struct SegmentTree<F, T> {
+    n: usize,           // 列の長さ
+    array: Vec<T>,      // 二分木
+    identity_e: T,      // 単位元
+    combine_f: F,       // 評価関数
+}
+impl<F: Fn(T,T) -> T , T: Copy> SegmentTree<F,T>{
+    // 初期化
+    fn new(length: usize, identity_e: T, combine_f: F) -> Self{
+        let mut n = 1;
+        while n < length { n <<= 1; }
+        SegmentTree {n, array: vec![identity_e; 2*n] , identity_e, combine_f}
+    }
+    // [1点更新] 位置 index (0-indexed) を値 value で更新
+    fn update(&mut self, index: usize, val: T) {
+        let mut i = self.n + index;
+        self.array[i] = val;
+        while i > 1 {
+            i >>= 1;
+            self.array[i] = (self.combine_f)(
+                self.array[i << 1 | 0],
+                self.array[i << 1 | 1],
+            )
+        }
+    }
+    // [区間取得] 区間 [l, r) (0-indexed) 内の要素について
+    // l 番目から順に、 combine_f を適応した結果を返す
+    fn prod(&mut self, lindex: usize, rindex: usize) -> T {
+        let mut l = lindex + self.n;
+        let mut r = rindex + self.n;
+        let mut val_l = self.identity_e;
+        let mut val_r = self.identity_e;
+        while l < r {
+            if l & 1 != 0 {
+                val_l = (self.combine_f)(val_l, self.array[l]);
+                l += 1;
+            }
+            if r & 1 != 0 {
+                r -= 1;
+                val_r = (self.combine_f)(self.array[r], val_r);
+            }
+            l >>= 1; r >>= 1;
+        }
+        (self.combine_f)(val_l, val_r)
+    }
+}
+
+
+#[cfg(test)]
+mod tests {
+    // 評価関数
+    pub fn combine_func(a: usize, b: usize) -> usize {
+        std::cmp::max(a, b)
+    }
+
+    use crate::SegmentTree;
+    #[test]
+    fn segment(){
+        let n = 8;
+        let mut sg = SegmentTree::new(n+1, 0, combine_func);
+        sg.update(3, 16);
+        assert_eq!(0, sg.prod(4, 7));
+        sg.update(5, 13);
+        assert_eq!(13, sg.prod(4, 7));
+    }
+}
+
+fn main() {
+    
+
+    
+}

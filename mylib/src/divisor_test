@@ -1,0 +1,51 @@
+use cargo_snippet::snippet;
+
+#[snippet]
+pub fn divisor(n: usize) -> Vec<usize> {
+    let mut ret = Vec::new();
+    let mut i = 1;
+    while i*i <= n {
+        if n % i == 0 {
+            ret.push(i);
+            if n / i != i {
+                ret.push(n / i);
+            }
+        }
+        i += 1;
+    }
+    ret.sort();
+    ret
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::divisor;
+
+    
+    #[test]
+    fn mini1() {
+        let a = divisor(1);
+        assert_eq!(1, a.len());
+        assert_eq!(1, a[0]);
+    }
+
+    #[test]
+    fn val24(){
+        let a = divisor(24);
+        assert_eq!(8, a.len());
+        
+        let mut now = 1;
+        let mut cnt = 0;
+        while now <= 24 {
+            if 24 % now == 0 {
+                assert_eq!(now, a[cnt]);
+                cnt += 1;
+            }
+            now += 1;
+        }
+    }
+}
+
+fn main() {
+    
+}

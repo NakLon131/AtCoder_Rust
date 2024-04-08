@@ -1,0 +1,1 @@
+cp -rf .vscode ../Yuki_Rust/

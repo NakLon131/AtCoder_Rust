@@ -1,0 +1,69 @@
+use cargo_snippet::snippet;
+
+#[snippet]
+fn mat_permutation(a: &Vec<Vec<usize>>, b: &Vec<Vec<usize>>, sz: usize, mods: usize) -> Vec<Vec<usize>> {
+    let mut ret = vec![vec![0usize; sz]; sz];
+    for i in 0..sz {
+        for j in 0..sz {
+            for k in 0..sz {
+                ret[i][j] += a[i][k] * b[k][j];
+                ret[i][j] %= mods;
+            }
+        }
+    }
+    ret
+}
+fn mat_pow(a: &Vec<Vec<usize>>, mut b: usize, sz: usize, mods: usize) -> Vec<Vec<usize>> {
+    let mut c = a.clone();
+    let mut ret = vec![vec![0usize; sz]; sz];
+    for i in 0..sz {ret[i][i] = 1;}	// 単位行列で初期化
+    while b > 0 {
+        if b % 2 != 0 {
+            ret = mat_permutation(&ret, &c, sz, mods);
+        }
+        c = mat_permutation(&c, &c, sz, mods);
+        b >>= 1;
+    }
+    ret
+}
+
+
+// pub fn func() {
+//     // todo
+//     return;
+// }
+
+#[cfg(test)]
+mod tests {
+    // use super::*;
+
+    use crate::mat_pow;
+
+    #[test]
+    fn fibo(){ // フィボナッチ数列
+        let mut a = vec![vec![0usize; 2]; 2];
+		a[0][0] = 1; a[0][1] = 1; a[1][0] = 1;  a[1][1] = 0;
+
+        const MOD : usize = 998244353;
+        let r = mat_pow(&a, 10-1, 2, MOD);
+
+        // 1 1 2 3 5 8 13 21 34 55 ...
+        assert_eq!(55, (r[1][0] + r[1][1] % MOD) );
+    }
+    #[test]
+    fn ryukka(){ // リュカ数列(初期値のみ異なる)
+        let mut a = vec![vec![0usize; 2]; 2];
+		a[0][0] = 1; a[0][1] = 1; a[1][0] = 1; a[1][1] = 0;
+
+        const MOD : usize = 998244353;
+        let r = mat_pow(&a, 5-1, 2, MOD);
+
+        // 1 3 4 7 11 18 ...
+        assert_eq!(11, (3*r[1][0] + r[1][1] % MOD) );
+    }
+
+}
+
+fn main() {
+    
+}

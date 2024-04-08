@@ -1,0 +1,21 @@
+{
+  "lower_bound": {
+    "prefix": "lower_bound",
+    "body": [
+      "// 二分探索"
+      "pub fn lower_bound<T: std::cmp::PartialOrd>(vec: &Vec<T>, val: T) -> usize {",
+      "    let mut l = 0;",
+      "    let mut r = vec.len();",
+      "    while r - l > 0 {",
+      "        let m = (l + r) / 2;",
+      "        if vec[m] < val {",
+      "            l = m + 1;",
+      "        } else {",
+      "            r = m;",
+      "        }",
+      "    }",
+      "    l",
+      "}"
+    ]
+  }
+}

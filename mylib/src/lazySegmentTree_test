@@ -1,0 +1,149 @@
+use cargo_snippet::snippet;
+
+#[snippet]
+
+// 遅延評価セグメントツリーライブラリ
+struct LazySegmentTree<F1, F2, F3, T> {
+	// セグメントツリー 
+	n: usize, // 列の長さ
+	h: usize, // 木の高さ
+	n_arr: Vec<T>, // 値データの二分木
+	l_arr: Vec<T>, // 遅延データの二分木
+	n_id_e: T, // 値データの単位元
+	l_id_e: T, // 遅延データの単位元
+	n_f: F1, // 値データの評価関数
+	l_f: F2, // 遅延データの評価関数
+	reflect_f: F3, // 遅延データを値データに作用させる関数
+}
+impl<F1: Fn(T,T) -> T, F2: Fn(T,T) -> T, F3: Fn(T,T) -> T, T: Copy + std::cmp::PartialEq> LazySegmentTree<F1,F2,F3,T>{
+  // 初期化
+  fn new(length: usize, n_id_e: T, l_id_e: T, 
+	n_f: F1, l_f: F2, reflect_f: F3) -> Self{
+	  let mut n = 1;
+	  let mut h = 0;
+	  while n < length { n <<= 1; h += 1; }
+	  LazySegmentTree {n, h, n_arr: vec![n_id_e; 2*n], l_arr: vec![l_id_e; 2*n], 
+		n_id_e, l_id_e, n_f, l_f, reflect_f}
+  }
+  // 遅延データの値を値データに作用させたときの結果を返す
+  fn _ref_lazy(&mut self, index: usize) -> T {
+	(self.reflect_f)(self.n_arr[index], self.l_arr[index])
+  }
+  // [遅延評価] index番目(0-indexed)の要素を含む区間について遅延データを伝播させる 根に近いものから処理する。
+  fn _pro_from_top(&mut self, index: usize) {
+	let sindex = index + self.n;
+	for h in (1..=self.h).rev() {
+		let i = sindex >> h;
+		if self.l_arr[i] != self.l_id_e {
+			// 遅延データの情報を子に伝播させる
+			self.l_arr[i << 1] = (self.l_f)( self.l_arr[i << 1], self.l_arr[i]); // 左の子
+			self.l_arr[i << 1 | 1] = (self.l_f)(self.l_arr[i << 1 | 1], self.l_arr[i]); // 右の子
+			// 遅延データの情報を値データに反映させ、遅延データの値をリセット
+			self.n_arr[i] = self._ref_lazy(i);
+			self.l_arr[i] = self.l_id_e;
+		}
+	}
+  }
+  // index番目(0-indexed)の要素を表す葉(下)から順に値データを確定させる
+  fn _upd_from_bottom(&mut self, index: usize) {
+	let mut iindex = (index + self.n) >> 1;
+	while iindex > 0 {
+		let a = self._ref_lazy(iindex << 1);
+		let b = self._ref_lazy(iindex << 1 | 1);
+		self.n_arr[iindex] = (self.n_f)(a, b);
+		iindex >>= 1;
+	}
+  }
+  // 配列の初期化(必須ではない)
+  #[allow(unused)]
+  fn init(&mut self, array: &Vec<T>) {
+	for i in 0..array.len() { self.n_arr[i + self.n] = array[i]; }
+	for i in (0..self.n).rev() {
+		self.n_arr[i] = (self.n_f)(self.n_arr[i << 1], self.n_arr[i << 1 | 1]);
+	}
+  }
+  // [区間更新] 位置[L, R) index (0-indexed) を値 value で更新
+  fn update(&mut self, lindex: usize, rindex: usize, value: T) {
+	// トップダウンに遅延データの値を子に伝搬させる
+	self._pro_from_top(lindex);
+	self._pro_from_top(rindex-1);
+	// 入力に対応する区間について遅延データを更新
+	let mut llazy = lindex + self.n; let mut rlazy = rindex + self.n;
+	while llazy < rlazy {
+		if llazy & 1 != 0 {
+			self.l_arr[llazy] = (self.l_f)(self.l_arr[llazy], value);
+			llazy += 1;
+		}
+		if rlazy & 1 != 0 {
+			rlazy -= 1;
+			self.l_arr[rlazy] = (self.l_f)(self.l_arr[rlazy], value);
+		}
+		llazy >>= 1; rlazy >>= 1;
+	}
+	// 値データをボトムアップに更新
+	self._upd_from_bottom(lindex);
+	self._upd_from_bottom(rindex-1);
+  }
+  // [区間取得] 区間 [l, r) (0-indexed) 内の要素について
+  // l 番目から順に、 combine_f を適応した結果を返す
+  fn prod(&mut self, lindex: usize, rindex: usize) -> T {
+	// トップダウンに遅延データの値を子に伝搬させる
+	self._pro_from_top(lindex);
+	self._pro_from_top(rindex-1);
+	// 入力に対応する区間について値を取得して合成
+	let mut l = lindex + self.n;
+	let mut r = rindex + self.n;
+	let mut val_l = self.n_id_e;
+	let mut val_r = self.n_id_e;
+	while l < r {
+		 if l & 1 != 0 {
+			let a = self._ref_lazy(l);
+			val_l = (self.n_f)(val_l, a);
+			l += 1;
+		 }
+		 if r & 1 != 0 {
+			r -= 1;
+			let b = self._ref_lazy(r);
+			val_r = (self.n_f)(b, val_r);
+		 }
+		 l >>= 1; r >>= 1;
+	 }
+	 (self.n_f)(val_l, val_r)
+  }
+}
+
+#[cfg(test)]
+mod tests {
+    // 値データの評価関数
+pub fn cmb_n_func(a: usize, b: usize) -> usize { 
+    std::cmp::min(a, b)
+  }
+  // 遅延データの評価関数
+  pub fn cmb_l_func(a: usize, b: usize) -> usize {
+      a + b
+  }
+  // 遅延データを値データに作用させる関数
+  pub fn ref_func(a: usize, b: usize) -> usize {
+      cmb_l_func(a, b)
+  }
+
+    // use super::*;
+    use crate::LazySegmentTree;
+    #[test]
+    fn test1(){
+        const INF: usize = 1 << 60;
+        let n = 6;
+        let a = vec![5, 1, 8, 2, 1, 5];
+        let mut sg = LazySegmentTree::new(n, INF, 0, 
+            cmb_n_func, cmb_l_func, ref_func);
+        sg.init(&a);
+        assert_eq!(1, sg.prod(0, 5));
+        assert_eq!(1, sg.prod(0, 4));
+        sg.update(1, 4, 5);
+        assert_eq!(5, sg.prod(0, 3));
+    }
+}
+
+fn main() {
+    
+}

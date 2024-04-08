@@ -1,0 +1,60 @@
+use cargo_snippet::snippet;
+
+#[snippet]
+pub fn func() {
+    // todo
+    return;
+}
+
+#[cfg(test)]
+mod tests {
+    // use super::*;
+
+    use crate::is_cycle_directed;
+
+    #[test]
+    fn test1(){
+        let mut uv = vec![Vec::new(); 3];
+        let mut used = vec![false; 3];
+        let mut finished = vec![false; 3];
+        uv[0].push(1);
+        uv[1].push(2);
+        uv[2].push(0);
+        assert_eq!(true, is_cycle_directed(0, &uv, &mut used, &mut finished));
+    }
+    #[test]
+    fn test2(){
+        let mut uv = vec![Vec::new(); 3];
+        let mut used = vec![false; 3];
+        let mut finished = vec![false; 3];
+        uv[0].push(1);
+        uv[1].push(2);
+        assert_eq!(false, is_cycle_directed(0, &uv, &mut used, &mut finished));
+    }
+
+}
+
+fn main() {
+    return;
+}
+
+fn is_cycle_directed(
+    cpos: usize,
+    uv: &Vec<Vec<usize>>,
+    used: &mut Vec<bool>,
+    finished: &mut Vec<bool>,
+) -> bool {
+    let mut ret = false;
+    used[cpos] = true;
+    for &npos in &uv[cpos] {
+        if finished[npos] {
+            continue;
+        }
+        if used[npos] {
+            return true;
+        }
+        ret |= is_cycle_directed(npos, uv, used, finished);
+    }
+    finished[cpos] = true;
+    ret
+}
