@@ -24,10 +24,10 @@ use superslice::Ext;
 use ac_library::{
 	Dsu,
 };
+// const MOD17: usize = 1000000007;
+// const MOD93: usize = 998244353;
+// const INF: usize = 1 << 60;
 
 fn main() {
-	input!{
-		n: usize,
-	}
-	println!("{n}");
+    
 }

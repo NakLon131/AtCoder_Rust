@@ -1,0 +1,1 @@
+cp base.rs src/bin/b.rs

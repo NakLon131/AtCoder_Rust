@@ -4,6 +4,8 @@ if [ $# -lt 1 ]; then
 fi
 FOLDER=$1
 MVPATH="../../AtCoders"
-mkdir $MVPATH/$FOLDER
-cp $FOLDER/src/bin/* $MVPATH/$FOLDER/
+TODAY=`date +"%Y%m%d"`
+
+mkdir $MVPATH/$FOLDER-$TODAY
+cp $FOLDER/src/bin/* $MVPATH/$FOLDER-$TODAY/
 rm -rf $FOLDER
