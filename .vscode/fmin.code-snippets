@@ -1,0 +1,16 @@
+{
+  "fmin": {
+    "prefix": "fmin",
+    "body": [
+      "pub fn fmin(x: &Vec<f64>) -> f64 {",
+      "    let mut ret = x[0];",
+      "    for &i in x {",
+      "        if ret > i {",
+      "            ret = i;",
+      "        }",
+      "    }",
+      "    ret",
+      "}"
+    ]
+  }
+}

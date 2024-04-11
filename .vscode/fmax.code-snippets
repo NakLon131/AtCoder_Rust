@@ -1,0 +1,16 @@
+{
+  "fmax": {
+    "prefix": "fmax",
+    "body": [
+      "pub fn fmax(x: &Vec<f64>) -> f64 {",
+      "    let mut ret = x[0];",
+      "    for &i in x {",
+      "        if ret < i {",
+      "            ret = i;",
+      "        }",
+      "    }",
+      "    ret",
+      "}"
+    ]
+  }
+}

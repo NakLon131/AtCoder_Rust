@@ -46,4 +46,4 @@ fn main() {
 cargo test
 
 5. snippet部分を生成したファイルを置く。
-cargo snippet -t vscode > ~/wsl_work/Rust/.vscode/xxx.code-snippets
+cargo snippet -t vscode > ~/wsl_work/Rust/AtCoder_Rust/.vscode/xxx.code-snippets
