@@ -1,3 +1,8 @@
+# セッションが切れている場合は、ログインし直す
+cargo compete login atcoder
+Username: xxx
+Password: yyy
+
 # コンテストのデータのダウンロード
 cargo compete new xxxxxx
 

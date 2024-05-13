@@ -3,3 +3,8 @@ rm -rf target/debug/deps/abc*
 rm -rf target/debug/deps/libabc*
 rm -rf target/debug/incremental/abc*
 rm -rf target/debug/abc*
+rm -rf target/release/.fingerprint/abc*
+rm -rf target/release/deps/abc*
+rm -rf target/release/deps/libabc*
+rm -rf target/release/incremental/abc*
+rm -rf target/release/abc*
