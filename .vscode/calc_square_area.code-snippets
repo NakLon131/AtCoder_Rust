@@ -1,0 +1,16 @@
+{
+  "calc_square_area": {
+    "prefix": "calc_square_area",
+    "body": [
+      "// [0, 0] ~ (x, y)の面積",
+      "pub fn calc_area(x: i64, y: i64) -> i64 {",
+      "    // TODO",
+      "    0",
+      "}",
+      "// [a,b] ~ (c,d) の面積",
+      "pub fn calc_square_area(a: i64, b: i64, c: i64, d: i64) -> i64 {",
+      "    calc_area(c, d) + calc_area(a, b) - calc_area(a, d) - calc_area(c, b)",
+      "}"
+    ]
+  }
+}

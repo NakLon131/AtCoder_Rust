@@ -1,0 +1,32 @@
+use cargo_snippet::snippet;
+
+#[snippet]
+// [a,b] ~ (c,d) の面積
+pub fn calc_square_area(a: i64, b: i64, c: i64, d: i64) -> i64 {
+	calc_area(c, d) + calc_area(a, b) - calc_area(a, d) - calc_area(c, b)
+}
+
+#[snippet]
+// [0, 0] ~ (x, y)の面積
+pub	fn calc_area(x: i64, y: i64) -> i64 {
+	// TODO
+    0
+}
+
+#[cfg(test)]
+mod tests {
+    // use super::*;
+
+    use crate::calc_square_area;
+
+    #[test]
+    fn test1(){
+        // todo
+        let x = calc_square_area(0, 0, 0, 0);
+        assert_eq!(x, 0);
+    }
+}
+
+fn main() {
+    
+}
