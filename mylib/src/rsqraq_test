@@ -1,0 +1,109 @@
+use cargo_snippet::snippet;
+
+// 区間加算、区間和取得のBIT i64型で動作する
+struct RsqRqa {
+	n: usize, // 列の長さ
+	array_sum: FenwickTree<i64>, // 区間和用
+	array_addtion: FenwickTree<i64>, // 区間和用
+}
+impl RsqRqa{
+	// 初期化
+	pub fn new(length: usize, identity_e: i64) -> Self {
+		let bit0 = FenwickTree::new(length, identity_e); // 区間和用
+		let bit1 = FenwickTree::new(length, identity_e); // 区間加算用
+		RsqRqa { n: length, array_sum: bit0, array_addtion: bit1 }
+	}
+
+	// 1点加算 [s]
+	#[allow(unused)]
+	pub fn add(&mut self, s: usize, val: i64) {
+		self.array_sum.add(s, -val * (s as i64));
+		self.array_sum.add(s+1, val * (s as i64 + 1));
+		self.array_addtion.add(s, val);
+		self.array_addtion.add(s+1, -val);
+	}
+	// 区間加算 [s,t)
+	#[allow(unused)]
+	pub fn range_add(&mut self, s: usize, t: usize, val: i64) {
+		self.array_sum.add(s, -val * (s as i64));
+		self.array_sum.add(t, val * t as i64);
+		self.array_addtion.add(s, val);
+		self.array_addtion.add(t, -val);
+	}
+	// 1点取得 [s]
+	#[allow(unused)]
+	pub fn get(&mut self, s: usize) -> i64{
+		let mut ret = 0;
+		ret += self.array_sum.sum(0..s+1);
+		ret -= self.array_sum.sum(0..s);
+		ret += self.array_addtion.sum(0..s+1) * (s as i64 +1) as i64;
+		ret -= self.array_addtion.sum(0..s) * (s as i64) as i64;
+		ret
+	}
+	// 区間和取得 [s, t)
+	#[allow(unused)]
+	pub fn range_sum(&mut self, s: usize, t: usize) -> i64{
+		let mut ret = 0;
+		ret += self.array_sum.sum(0..t);
+		ret -= self.array_sum.sum(0..s);
+		ret += self.array_addtion.sum(0..t) * t as i64;
+		ret -= self.array_addtion.sum(0..s) * (s as i64) as i64;
+		ret
+	}
+	// デバッグ
+	#[allow(unused)]
+	pub fn dbg_print(&mut self) {
+		for i in 0..self.n {
+			print!("{} ", self.get(i));
+		}
+		println!();
+	}
+}
+
+use ac_library::{
+	FenwickTree,
+};
+
+#[cfg(test)]
+mod tests {
+    // use super::*;
+
+    use crate::RsqRqa;
+
+    #[test]
+    fn test1(){
+        let n = 5;
+        let a = [1, 2, 3, 4, 5];
+        
+        let mut sg = RsqRqa::new(5, 0);
+
+        // セット値のテスト
+        for i in 0..5 { sg.add(i, a[i]); }
+        for i in 0..n { assert_eq!(a[i], sg.get(i)); }
+
+        // 区間和のテスト
+        assert_eq!(15, sg.range_sum(0, n));
+
+        // 1点更新のテスト
+        sg.add(0, 5);
+        assert_eq!(6, sg.get(0));
+        assert_eq!(20, sg.range_sum(0, n));
+        sg.add(4, -10);
+        assert_eq!(-5, sg.get(4));
+        assert_eq!(10, sg.range_sum(0, n));
+
+        // 区間更新のテスト
+        sg.range_add(0, 5, 3);
+        assert_eq!(9, sg.get(0));
+        assert_eq!(5, sg.get(1));
+        assert_eq!(6, sg.get(2));
+        assert_eq!(7, sg.get(3));
+        assert_eq!(-2, sg.get(4));
+        assert_eq!(25, sg.range_sum(0, 5));
+
+    }
+}
+
+fn main() {
+    
+}

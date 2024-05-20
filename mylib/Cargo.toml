@@ -7,3 +7,4 @@ edition = "2021"
 
 [dependencies]
 cargo-snippet = "0.6.5"
+ac-library-rs = "0.1.1"

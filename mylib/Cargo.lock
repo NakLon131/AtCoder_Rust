@@ -3,6 +3,12 @@
 version = 3
 
 [[package]]
+name = "ac-library-rs"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "09e1ead7b72f44698f97266946c0576d00c9e2010858f5aba47aa4660177ef73"
+
+[[package]]
 name = "cargo-snippet"
 version = "0.6.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -12,5 +18,6 @@ checksum = "5b5d683f04783a882180b7cd232a4e5cb2d01b305e145968e6062a71f66d5ead"
 name = "mylib"
 version = "0.1.0"
 dependencies = [
+ "ac-library-rs",
  "cargo-snippet",
 ]
