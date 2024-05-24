@@ -2,20 +2,24 @@ use cargo_snippet::snippet;
 
 #[snippet]
 struct SegmentTree<F, T> {
+    length: usize,// 入力の長さ
     n: usize,           // 列の長さ
     array: Vec<T>,      // 二分木
     identity_e: T,      // 単位元
     combine_f: F,       // 評価関数
 }
-impl<F: Fn(T,T) -> T , T: Copy> SegmentTree<F,T>{
+#[snippet]
+impl<F: Fn(T,T) -> T , T: Copy + std::fmt::Display> SegmentTree<F,T>{
     // 初期化
+    #[allow(unused)]
     fn new(length: usize, identity_e: T, combine_f: F) -> Self{
         let mut n = 1;
         while n < length { n <<= 1; }
-        SegmentTree {n, array: vec![identity_e; 2*n] , identity_e, combine_f}
+        SegmentTree {length, n, array: vec![identity_e; 2*n] , identity_e, combine_f}
     }
     // [1点更新] 位置 index (0-indexed) を値 value で更新
-    fn update(&mut self, index: usize, val: T) {
+    #[allow(unused)]
+    fn set(&mut self, index: usize, val: T) {
         let mut i = self.n + index;
         self.array[i] = val;
         while i > 1 {
@@ -26,8 +30,30 @@ impl<F: Fn(T,T) -> T , T: Copy> SegmentTree<F,T>{
             )
         }
     }
+    // [1点取得] [l] (0-indexed) 内の値を取得
+    #[allow(unused)]
+    fn get(&mut self, index: usize) -> T {
+        let mut l = index + self.n;
+        let mut r = index + 1 + self.n;
+        let mut val_l = self.identity_e;
+        let mut val_r = self.identity_e;
+        while l < r {
+            if l & 1 != 0 {
+                val_l = (self.combine_f)(val_l, self.array[l]);
+                l += 1;
+            }
+            if r & 1 != 0 {
+                r -= 1;
+                val_r = (self.combine_f)(self.array[r], val_r);
+            }
+            l >>= 1; r >>= 1;
+        }
+        (self.combine_f)(val_l, val_r)
+    }
+
     // [区間取得] 区間 [l, r) (0-indexed) 内の要素について
     // l 番目から順に、 combine_f を適応した結果を返す
+    #[allow(unused)]
     fn prod(&mut self, lindex: usize, rindex: usize) -> T {
         let mut l = lindex + self.n;
         let mut r = rindex + self.n;
@@ -46,25 +72,44 @@ impl<F: Fn(T,T) -> T , T: Copy> SegmentTree<F,T>{
         }
         (self.combine_f)(val_l, val_r)
     }
+    #[allow(unused)]
+	pub fn dbg_print(&mut self) {
+		for i in 0..self.length {
+			print!("{} ", self.get(i));
+		}
+		println!();
+	}
 }
-
+#[snippet]
+// 評価関数 
+pub fn combine_func(a: usize, b: usize) -> usize { 
+    // TODO
+    std::cmp::min(a, b)
+}
 
 #[cfg(test)]
 mod tests {
-    // 評価関数
-    pub fn combine_func(a: usize, b: usize) -> usize {
-        std::cmp::max(a, b)
-    }
-
     use crate::SegmentTree;
+    use crate::combine_func;
     #[test]
     fn segment(){
-        let n = 8;
-        let mut sg = SegmentTree::new(n+1, 0, combine_func);
-        sg.update(3, 16);
-        assert_eq!(0, sg.prod(4, 7));
-        sg.update(5, 13);
-        assert_eq!(13, sg.prod(4, 7));
+        let n = 5;
+        let mut sg = SegmentTree::new(n, 1usize << 60, combine_func);
+        sg.set(0, 2);
+        sg.set(1, 3);
+        sg.set(2, 5);
+        sg.set(3, 7);
+        sg.set(4, 11);
+
+        assert_eq!(2, sg.prod(0, n));
+        assert_eq!(5, sg.prod(2, 4));
+        assert_eq!(3, sg.prod(1, 2));
+
+        sg.set(0, 13);
+
+        sg.dbg_print();
+
+        assert_eq!(3, sg.prod(0, n));
     }
 }
 
