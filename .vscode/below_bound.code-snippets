@@ -1,0 +1,22 @@
+{
+  "lower_bound": {
+    "prefix": "below_bound",
+    "body": [
+      "// 二分探索",
+      "// x以下の最大のposを返す。0番目より小さい値では異常値として、「1<<60」を返す",
+      "pub fn below_bound<T: std::cmp::PartialOrd>(vec: &Vec<T>, val: T) -> usize {",
+      "    let mut l = 0;",
+      "    let mut r = vec.len();",
+      "    while r - l > 0 {",
+      "        let m = (l + r) / 2;",
+      "        if vec[m] <= val {",
+      "            l = m + 1;",
+      "        } else {",
+      "            r = m;",
+      "        }",
+      "    }",
+      "    if l == 0 { 1usize << 60 } else {l-1}",
+      "}"
+    ]
+  }
+}
