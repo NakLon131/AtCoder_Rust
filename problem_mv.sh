@@ -3,7 +3,7 @@ if [ $# -lt 1 ]; then
 	exit 1
 fi
 FOLDER=$1
-MVPATH="../../AtCoders"
+MVPATH="../../AtCoders/ABC"
 TODAY=`date +"%Y%m%d"`
 
 mkdir $MVPATH/$FOLDER-$TODAY
