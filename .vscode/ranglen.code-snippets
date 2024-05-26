@@ -2,7 +2,7 @@
   "ranglen": {
     "prefix": "ranglen",
     "body": [
-      "// ランレングス圧縮"
+      "// ランレングス圧縮",
       "pub fn ranglen(arr: &Vec<char>) -> Vec<(char, usize)> {",
       "    let len = arr.len();",
       "    let mut arr_ret = Vec::new();",

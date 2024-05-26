@@ -1,12 +1,4 @@
 {
-  "func": {
-    "prefix": "func",
-    "body": [
-      "pub fn func() {",
-      "    return;",
-      "}"
-    ]
-  },
   "is_cycle_directed": {
     "prefix": "is_cycle_directed",
     "body": [
