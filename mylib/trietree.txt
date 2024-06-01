@@ -1,0 +1,17 @@
+{
+	// トライ木
+	// 再帰的なデータ構造を作る
+	// この場合は子の(key,value)を追加する。
+	struct TrieTree{
+		cnt: usize, 
+		child: HashMap<char, TrieTree>,
+	}
+	impl TrieTree {
+		fn new() -> Self {
+			TrieTree {
+				cnt: 0,
+				child: HashMap::new(),
+			}
+		}	
+	}
+}
