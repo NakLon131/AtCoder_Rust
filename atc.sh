@@ -8,6 +8,7 @@ fi
 contest_new() {
 	EXAM=$1
 	cargo compete new $EXAM
+	cp thoughts.md $1/src/bin
 }
 
 # テスト実行
