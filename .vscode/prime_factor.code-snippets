@@ -1,0 +1,24 @@
+{
+  "prime_factor": {
+    "prefix": "prime_factor",
+    "body": [
+      "// 素因数分解 連想配列(順序不同)を返す。",
+      "pub fn prime_factor(x: usize) -> HashMap<usize, usize> {",
+      "    let mut mp = HashMap::new();",
+      "    let mut now = x;",
+      "    let mut i = 2;",
+      "    while i * i <= x {",
+      "        while now % i == 0 {",
+      "            *mp.entry(i).or_insert(0) += 1;",
+      "            now /= i;",
+      "        }",
+      "        i += 1;",
+      "    }",
+      "    if now != 1 {",
+      "        *mp.entry(now).or_insert(0) += 1;",
+      "    }",
+      "    mp",
+      "}"
+    ]
+  }
+}
