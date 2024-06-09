@@ -2,7 +2,7 @@
   "matpow": {
     "prefix": "matpow",
     "body": [
-      "// 行列計算(行列a,bがともに正方形)",
+      "// 行列計算(行列a,bがともに正方形、szがサイズ)",
       "// 例 2*2同士の行列",
       "#[allow(unused)]",
       "pub fn mat_square_permutation(",
@@ -22,7 +22,7 @@
       "    }",
       "    ret",
       "}",
-      "// 行列計算(aが行列、bがベクトル)",
+      "// 行列計算(aが行列、bがベクトル、szがサイズ)",
       "// 例 3*3の行列 x 要素3のベクトル",
       "#[allow(unused)]",
       "pub fn mat_vector_permutation(",
@@ -42,6 +42,9 @@
       "}",
       "",
       "// 行列累乗",
+      "// 正方行列に対して繰り返し二乗法を行う",
+      "// a:正方行列、b:繰り返す回数",
+      "// 例 ([[1,1],[1,0])^3 = [[3,2],[2,1]]",
       "#[allow(unused)]",
       "fn mat_pow(a: &Vec<Vec<usize>>, mut b: usize, sz: usize, mods: usize) -> Vec<Vec<usize>> {",
       "    let mut c = a.clone();",

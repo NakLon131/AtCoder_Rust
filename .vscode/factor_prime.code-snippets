@@ -1,6 +1,6 @@
 {
-  "prime_factor": {
-    "prefix": "prime_factor",
+  "factor_prime": {
+    "prefix": "factor_prime",
     "body": [
       "// 素因数分解 連想配列(順序不同)を返す。",
       "pub fn prime_factor(x: usize) -> HashMap<usize, usize> {",

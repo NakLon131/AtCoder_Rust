@@ -1,6 +1,6 @@
 {
-  "prime_list": {
-    "prefix": "prime_list",
+  "eratos": {
+    "prefix": "eratos",
     "body": [
       "// エラトステネスの篩による素数リスト",
       "pub fn prime_list(x: usize) -> Vec<usize> {",

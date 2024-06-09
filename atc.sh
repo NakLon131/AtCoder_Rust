@@ -21,15 +21,14 @@ contest_test() {
 	cargo compete test $NO --release
 }
 
-# 提出
-# cargo compete submit xxx
-# contest_submit() {
-# 	EXAM=$1
-# 	NO=$2
-# 	RELEASE=$3
-# 	cd $EXAM
-# 	cargo compete submit $NO --release
-# }
+# コードコピー
+# cat *.rs | xsel --clipboard --input
+code_copy() {
+	EXAM=$1
+	NO=$2
+	cd $EXAM
+	cat src/bin/$NO.rs | xsel --clipboard --input
+}
 
 if [ $1 = "n" ]; then
 	contest_new $2
@@ -40,6 +39,13 @@ elif [ $1 = "t" ]; then
 	fi
 	contest_test $2 $3 $4
 elif [ $1 = "s" ]; then
-	echo 注意 自動提出は廃止しました。
-	exit 1
+	if [ $# -lt 3 ]; then
+		echo 問題番号を指定してください
+		exit 1
+	fi
+	ret=$(contest_test $2 $3 $4)
+	if [ $? -eq 0 ]; then
+		code_copy $2 $3
+		echo ソースコードをコピーしました。
+	fi
 fi

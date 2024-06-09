@@ -47,9 +47,7 @@ use std::{
 	iter::FromIterator,
 };
 #[allow(unused)]
-use itertools::{
-	Itertools, 
-};
+use itertools::Itertools;
 #[allow(unused)]
 use num::integer::gcd;
 #[allow(unused)]
@@ -59,6 +57,9 @@ use ac_library::{
 	Dsu,
 	FenwickTree
 };
+// 繰り返し二乗法もACLにあり
+// use ac_library::ModInt998244353 as mint;
+// use ac_library::ModInt1000000007 as mint;
 '''
 
 [template.new]

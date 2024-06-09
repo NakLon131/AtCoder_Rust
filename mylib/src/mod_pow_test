@@ -1,0 +1,49 @@
+use cargo_snippet::snippet;
+
+// 繰り返し二乗法
+#[snippet]
+fn mod_pow(mut a: usize, mut b:usize, mods: usize) -> usize {
+	let mut res = 1;
+	while b > 0 {
+		if b % 2 == 1 {	res *= a; res %= mods; }
+		a *= a; a %= mods;
+		b >>= 1;
+	}
+	res
+}
+// 逆元による除算
+#[snippet]
+fn div(a:usize, b:usize, mods: usize) -> usize {
+	let mut ans = a;
+	let x = mod_pow(b, mods-2, mods);
+	ans *= x; ans %= mods;
+	ans
+}
+
+#[cfg(test)]
+mod tests {
+    // use super::*;
+
+    use crate::{div, mod_pow};
+
+    #[test]
+    fn test1(){
+        let x = mod_pow(3, 5, 998244353);
+        assert_eq!(243, x);
+    }
+    #[test]
+    fn test2(){
+        let x = mod_pow(2, 30, 998244353);
+        let y = (1 << 30) % 998244353;
+        assert_eq!(x, y);
+    }
+    #[test]
+    fn test3(){
+        let x = div(1, 2, 998244353);
+        assert_eq!(499122177, x);
+    }
+}
+
+fn main() {
+    
+}

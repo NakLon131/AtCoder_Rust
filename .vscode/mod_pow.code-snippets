@@ -1,0 +1,34 @@
+{
+  "div": {
+    "prefix": "div",
+    "body": [
+      "// 繰り返し二乗法による除算",
+      "fn div(a: usize, b: usize, mods: usize) -> usize {",
+      "    let mut ans = a;",
+      "    let x = mod_pow(b, mods - 2, mods);",
+      "    ans *= x;",
+      "    ans %= mods;",
+      "    ans",
+      "}",
+    ]
+  },
+  "mod_pow": {
+    "prefix": "mod_pow",
+    "body": [
+      "// 繰り返し二乗法",
+      "fn mod_pow(mut a: usize, mut b: usize, mods: usize) -> usize {",
+      "    let mut res = 1;",
+      "    while b > 0 {",
+      "        if b % 2 == 1 {",
+      "            res *= a;",
+      "            res %= mods;",
+      "        }",
+      "        a *= a;",
+      "        a %= mods;",
+      "        b >>= 1;",
+      "    }",
+      "    res",
+      "}"
+    ]
+  }
+}
