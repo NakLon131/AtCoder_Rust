@@ -1,0 +1,257 @@
+use cargo_snippet::snippet;
+
+#[snippet]
+struct Sccgh {
+    n: usize, // グラフサイズ
+    uv: Vec<Vec<usize>>, // 有向辺
+    ruv: Vec<Vec<usize>>, // 有向グラフの逆辺
+    used: Vec<bool>, // 探索済み頂点
+    orders: Vec<usize>, // DFSの帰りがけ頂点
+}
+#[snippet]
+impl Sccgh {
+    // 初期化
+    pub fn new(n: usize) -> Self {
+        let uv = vec![vec![0; 0]; n];
+        let ruv = vec![vec![0; 0]; n];
+        let used = vec![false; n];
+        let orders = vec![0; 0];
+        // let component  = vec![vec![0; 0]; n];
+        Sccgh {n, uv, ruv, used, orders}
+    }
+
+    // 有向辺と逆の有向辺を追加
+    pub fn add_edge(&mut self, x: usize, y: usize) {
+        self.uv[x].push(y);
+        self.ruv[y].push(x);
+    }
+
+    // 有向辺DFSして帰りがけに頂点を記録
+	fn dfs(&mut self, cpos: usize){
+		self.used[cpos] = true;
+        let neighbors = self.uv[cpos].clone();
+		for &npos in &neighbors {
+			if self.used[npos] { continue; }
+			self.dfs(npos);
+		}
+		self.orders.push(cpos);
+	}
+    // 記録した頂点と逆順に逆辺有向辺DFS
+    fn rdfs(&mut self, cpos: usize, group_num: usize, component: &mut Vec<Vec<usize>>) {
+        self.used[cpos] = true;
+        component[group_num].push(cpos);
+        let neighbors = self.ruv[cpos].clone();
+        for &npos in &neighbors {
+            if self.used[npos] { continue; }
+            self.rdfs(npos, group_num, component);
+        }
+    }
+
+    // 強連結成分分解を実行
+    // 連結成分リストを返す
+    // 得られる情報
+    // 1.連結成分分解の個数と要素。自己ループ、閉路、隣の頂点のいずれか
+    // 2.連結成分分解はトポロジカル順である。
+    fn get_component(&mut self) -> Vec<Vec<usize>>{
+        // 有向辺DFSして帰りがけに頂点を記録
+        self.used = vec![false; self.n];
+        for pos in 0..self.n {
+            if self.used[pos] { continue; }
+            self.dfs(pos);
+        }
+                
+        let mut cnt = 0;
+        self.used = vec![false; self.n];
+        let mut component  = Vec::new();
+
+        // 記録した頂点と逆順に逆辺有向辺DFS
+        let mut serach = self.orders.clone();
+        serach.reverse();
+        for &pos in &serach {
+            if self.used[pos] { continue; }
+            component.push(Vec::new());
+            self.rdfs(pos, cnt, &mut component);
+            cnt += 1;
+        }
+        component
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    // use super::*;
+
+    use crate::Sccgh;
+
+    #[test]
+    fn test1(){
+        // Yuki432H_sample1
+        let n = 5;
+        let mut a = vec![Vec::new(); n];
+        a[0] = vec![1, 2];
+        a[1] = vec![0, 2, 4];
+        a[2] = vec![0, 1];
+        a[3] = vec![4];
+        a[4] = vec![1, 3];
+        
+        // 強連結成分分解
+        let mut scc = Sccgh::new(n);
+        for i in 0..n {
+            for &j in &a[i] {
+                // 辺を追加
+                scc.add_edge(i, j);
+            }
+        }
+        // 強連結成分分解を実施
+        let scc_info = scc.get_component();
+        assert_eq!(1, scc_info.len());
+
+        // 各頂点を連結成分のグループに割り当て
+        let mut groups = vec![0; n];
+        for i in 0..scc_info.len() {
+            for &s in &scc_info[i] {
+                groups[s] = i;
+            }
+        }
+        // 頂点0からトポロジカル順に全てたどれるか判定
+        assert_eq!(0, groups[0]);
+
+        for i in 0..scc_info.len()-1 {
+            let mut f = false;
+            // 各連結成分の頂点
+            for &from in &scc_info[i] {
+                for &to in &scc.uv[from] {
+                    if groups[from] + 1 == groups[to] { f = true;}
+                }
+            }
+            if !f {
+                // NG
+            }
+        }
+        // OK
+        assert!(true);
+    }
+
+    #[test]
+    fn test2() {
+        // ABC357E_sample1
+        let n = 4;
+        let a = vec![1, 0, 0, 3];
+        
+        // 強連結成分分解
+        let mut scc = Sccgh::new(n);
+        for i in 0..n {
+            scc.add_edge(i, a[i]);
+        }
+
+        let mut scc_info = scc.get_component();
+        assert_eq!(3, scc_info.len());
+
+        // 木DP
+        let mut dp = vec![0; n];
+        scc_info.reverse();
+
+        for sc in &scc_info {
+            let sz = sc.len();
+            // 閉路
+            if sz >= 2 || sc[0] == a[sc[0]] {
+                for &u in sc { dp[u] = sz; }
+            }
+            // 閉路でない
+            else {
+                dp[sc[0]] = dp[a[sc[0]]] + 1;
+            } 
+        }
+        assert_eq!(8, dp.iter().sum::<usize>());
+    }
+
+}
+
+fn main() {
+    
+}
+
+// セグメントツリーライブラリ
+struct SegmentTree<F, T> {
+    length: usize,// 入力の長さ
+    n: usize,           // 列の長さ
+    array: Vec<T>,      // 二分木
+    identity_e: T,      // 単位元(0:合計、max、1:積、INF:min)
+    combine_f: F,       // 評価関数
+}
+impl<F: Fn(T,T) -> T , T: Copy + std::fmt::Display> SegmentTree<F,T>{
+    // 初期化
+    #[allow(unused)]
+    fn new(length: usize, identity_e: T, combine_f: F) -> Self{
+        let mut n = 1;
+        while n < length { n <<= 1; }
+        SegmentTree {length, n, array: vec![identity_e; 2*n] , identity_e, combine_f}
+    }
+    // [1点更新] 位置 index (0-indexed) を値 value で更新
+    #[allow(unused)]
+    fn set(&mut self, index: usize, val: T) {
+        let mut i = self.n + index;
+        self.array[i] = val;
+        while i > 1 {
+            i >>= 1;
+            self.array[i] = (self.combine_f)(
+                self.array[i << 1 | 0],
+                self.array[i << 1 | 1],
+            )
+        }
+    }
+    // [1点取得] 位置 index (0-indexed) 内の値を取得
+    #[allow(unused)]
+    fn get(&mut self, index: usize) -> T {
+        let mut l = index + self.n;
+        let mut r = index + 1 + self.n;
+        let mut val_l = self.identity_e;
+        let mut val_r = self.identity_e;
+        while l < r {
+            if l & 1 != 0 {
+                val_l = (self.combine_f)(val_l, self.array[l]);
+                l += 1;
+            }
+            if r & 1 != 0 {
+                r -= 1;
+                val_r = (self.combine_f)(self.array[r], val_r);
+            }
+            l >>= 1; r >>= 1;
+        }
+        (self.combine_f)(val_l, val_r)
+    }
+
+    // [区間取得] 区間 [l, r) (0-indexed) 内の要素について
+    // l 番目から順に、 combine_f を適応した結果を返す
+    #[allow(unused)]
+    fn prod(&mut self, lindex: usize, rindex: usize) -> T {
+        let mut l = lindex + self.n;
+        let mut r = rindex + self.n;
+        let mut val_l = self.identity_e;
+        let mut val_r = self.identity_e;
+        while l < r {
+            if l & 1 != 0 {
+                val_l = (self.combine_f)(val_l, self.array[l]);
+                l += 1;
+            }
+            if r & 1 != 0 {
+                r -= 1;
+                val_r = (self.combine_f)(self.array[r], val_r);
+            }
+            l >>= 1; r >>= 1;
+        }
+        (self.combine_f)(val_l, val_r)
+    }
+    #[allow(unused)]
+    pub fn dbg_print(&mut self) {
+        for i in 0..self.length {
+            print!("{} ", self.get(i));
+        }
+        println!();
+    }
+}
+// 評価関数 
+pub fn combine_func(a: usize, b: usize) -> usize { 
+    // TODO
+    std::cmp::min(a, b)
+}
