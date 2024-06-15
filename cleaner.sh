@@ -1,3 +1,5 @@
+sudo sh -c "echo 3 >'/proc/sys/vm/drop_caches'"  # swap=0の場合
+sudo sh -c "echo 3 >'/proc/sys/vm/drop_caches' && swapoff -a && swapon -a" # swap設定値ありの場合
 rm -rf target/debug/.fingerprint/abc*
 rm -rf target/debug/deps/abc*
 rm -rf target/debug/deps/libabc*

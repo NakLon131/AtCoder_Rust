@@ -1,5 +1,5 @@
 fn main() {
-
+    
 }
 
 // const MOD17: usize = 1000000007;
@@ -7,6 +7,7 @@ fn main() {
 // const INF: usize = 1 << 60;
 // let dx = vec![!0, 0, 1, 0]; // 上左下右
 // let dy = vec![0, !0, 0, 1]; // 上左下右
+// let d = vec!{(!0, 0), (0, !0), (1, 0), (0, 1)}; // 上左下右
 
 #[allow(unused)]
 use proconio::{input, marker::Chars, marker::Usize1};

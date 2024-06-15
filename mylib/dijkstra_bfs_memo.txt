@@ -1,0 +1,32 @@
+fn dijkstra(
+	spos: usize, // 入力
+	uv: &Vec<Vec<usize>>, // 有向・無向グラフ、探索の4方向
+	dist: &mut Vec<i64>, // (グリッド・頂点)の(距離・時刻)
+	info: // その他
+) 
+{
+	// init
+	// sposの最短距離、キューを末尾に追加
+
+
+	// loop
+	// キューの先頭を取り出す。
+	let cpos = hp.pop.unwrap();
+
+	// 更新済みなら見ない
+
+
+	// uvで探索できる範囲を調べる
+	for &npos in &uv[cpos] {
+
+		// 更新可能
+
+			// 更新
+
+			// キューを末尾に追加	
+
+	}
+	
+	// end
+}
+
