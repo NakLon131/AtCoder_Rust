@@ -1,0 +1,33 @@
+{
+  "CalcCombPascal": {
+    "prefix": "CalcCombPascal",
+    "body": [
+      "// 計算量 O(N^2) + execute",
+      "struct CalcCombPascal {",
+      "    n: usize,",
+      "    comb: Vec<Vec<usize>>,",
+      "}",
+      "impl CalcCombPascal {",
+      "    // 初期化+パスカルの三角形",
+      "    pub fn new(n: usize, mods: usize) -> Self {",
+      "        let mut comb = vec![vec![0; n+1]; n+1];",
+      "        comb[0][0] = 1;",
+      "        for i in 0..n {",
+      "            for j in 0..=n {",
+      "                comb[i+1][j] += comb[i][j];",
+      "                if j > 0 { comb[i+1][j] += comb[i][j-1]; }",
+      "                comb[i+1][j] %= mods;",
+      "            }",
+      "        }",
+      "        CalcCombPascal {n, comb}",
+      "    }",
+      "",
+      "    // 組み合わせの値を返す",
+      "    pub fn get_comb(&mut self, n: usize, r: usize) -> usize {",
+      "        if n > self.n { return 0; } // 入力異常",
+      "        self.comb[n][r]",
+      "    }",
+      "}"
+    ]
+  }
+}

@@ -1,0 +1,53 @@
+use cargo_snippet::snippet;
+
+#[snippet]
+struct CalcCombPascal {
+    n: usize,
+    comb: Vec<Vec<usize>>,
+}
+impl CalcCombPascal {
+    // 初期化+パスカルの三角形
+    pub fn new(n: usize, mods: usize) -> Self {
+        let mut comb = vec![vec![0; n+1]; n+1];
+        comb[0][0] = 1;
+        for i in 0..n {
+            for j in 0..=n {
+                comb[i+1][j] += comb[i][j];
+                if j > 0 { comb[i+1][j] += comb[i][j-1]; }
+                comb[i+1][j] %= mods;
+            }
+        }
+        CalcCombPascal {n, comb}
+    }
+
+    // 組み合わせの値を返す
+    pub fn get_comb(&mut self, n: usize, r: usize) -> usize {
+        if n > self.n { return 0; } // 入力異常
+        self.comb[n][r]
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    // use super::*;
+
+    use crate::CalcCombPascal;
+
+    #[test]
+    fn test1(){
+        let mut pascal = CalcCombPascal::new(100, 998244353);
+
+        // todo
+        assert_eq!(1, pascal.get_comb(5, 0));
+        assert_eq!(5, pascal.get_comb(5, 1));
+        assert_eq!(10, pascal.get_comb(5, 2));
+        assert_eq!(10, pascal.get_comb(5, 3));
+        assert_eq!(5, pascal.get_comb(5, 4));
+        assert_eq!(1, pascal.get_comb(5, 5));
+        assert_eq!(0, pascal.get_comb(5, 6));
+    }
+}
+
+fn main() {
+    
+}

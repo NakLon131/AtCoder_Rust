@@ -1,0 +1,72 @@
+use cargo_snippet::snippet;
+
+#[snippet]
+struct CalcCombModPow {
+    n: usize,
+    fact: Vec<usize>,
+    mods: usize,
+}
+impl CalcCombModPow {
+    // 初期化+階乗計算
+    pub fn new(n: usize, mods: usize) -> Self {
+        let mut fact = vec![1; n+1];
+        for i in 1..=n {
+            fact[i] = fact[i-1] * i;
+            fact[i] %= mods;
+        }
+        CalcCombModPow {n, fact, mods}
+    }
+    // 繰り返し二乗法
+    fn mod_pow(&mut self, mut a: usize, mut b:usize, mods: usize) -> usize {
+        let mut res = 1;
+        while b > 0 {
+            if b % 2 == 1 {	res *= a; res %= mods; }
+            a *= a; a %= mods;
+            b >>= 1;
+        }
+        res
+    }
+    // 逆元による除算
+    fn div(&mut self, a:usize, b:usize, mods: usize) -> usize {
+        let mut ans = a;
+        let x = self.mod_pow(b, mods-2, mods);
+        ans *= x; ans %= mods;
+        ans
+    }
+    // 組み合わせの値を返す
+    pub fn get_comb(&mut self, n: usize, r: usize) -> usize {
+        if n > self.n || r > self.n || r > n { return 0; } // 入力異常
+        let mut ret = self.fact[n];
+        ret = self.div(ret, self.fact[r], self.mods);
+        ret = self.div(ret, self.fact[n-r], self.mods);
+        ret
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    // use super::*;
+
+    use crate::CalcCombModPow;
+
+    #[test]
+    fn test1(){
+        let mut ncr = CalcCombModPow::new(100, 998244353);
+
+        // todo
+        assert_eq!(1, ncr.get_comb(5, 0));
+        assert_eq!(5, ncr.get_comb(5, 1));
+        assert_eq!(10, ncr.get_comb(5, 2));
+        assert_eq!(10, ncr.get_comb(5, 3));
+        assert_eq!(5, ncr.get_comb(5, 4));
+        assert_eq!(1, ncr.get_comb(5, 5));
+        assert_eq!(0, ncr.get_comb(5, 6));
+
+        assert_eq!(0, ncr.get_comb(150, 0));
+        assert_eq!(0, ncr.get_comb(150, 200));
+    }
+}
+
+fn main() {
+    
+}
