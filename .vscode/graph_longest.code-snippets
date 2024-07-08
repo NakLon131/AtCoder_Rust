@@ -1,0 +1,37 @@
+{
+  "LongPath": {
+    "prefix": "GraphLongPath",
+    "body": [
+      "// 最長距離の構造体",
+      "// from-toと最長距離を返す",
+      "#[allow(unused)]",
+      "struct LongPath {",
+      "  from : usize,",
+      "  to : usize,",
+      "  dist: usize",
+      "}",
+      "// dfsで最長パスを求める",
+      "// 引数:cpos: 現在位置,ppos: ひとつ前の位置, weight_edge: 重み付きの辺, cdist: 現在の距離",
+      "// 戻り値: (最長距離, 最も遠い位置)",
+      "fn tree_dfs(cpos: usize, ppos: usize, weight_edge: &Vec<Vec<(usize, usize)>>, cdist: usize) -> (usize, usize) {",
+      "  // 位置と距離を返す",
+      "  let mut ret  = (cdist, cpos);  ",
+      "  for &npos in &weight_edge[cpos] {",
+      "    // 後戻り禁止",
+      "    if npos.1 == ppos { continue; } ",
+      "    // 最長距離, 最も遠い位置を更新",
+      "    ret = max(ret, tree_dfs(npos.1, cpos, weight_edge, cdist + npos.0));",
+      "  }",
+      "  ret",
+      "}",
+      "// グラフの最長距離を求める 木の直径",
+      "fn longest_path(weight_edge: &Vec<Vec<(usize, usize)>>) -> LongPath {",
+      "  // 1回目実行で、最も遠い位置を見つける",
+      "  let far_info = tree_dfs(0, 1 << 30, weight_edge, 0);",
+      "  // 2回目実行で、最も遠い位置からの最長距離を見つける",
+      "  let longest_info = tree_dfs(far_info.1, 1 << 30, weight_edge, 0);",
+      "  LongPath {from: far_info.1, to: longest_info.1, dist: longest_info.0}",
+      "}",
+    ]
+  }
+}
