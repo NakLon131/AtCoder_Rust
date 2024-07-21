@@ -1,0 +1,17 @@
+{
+  "is_kaibun": {
+    "prefix": "is_kaibun",
+    "body": [
+      "// 回文",
+      "fn iskaibun(s: &Vec<char>) -> bool {",
+      "    let sz = s.len();",
+      "    for i in 0..sz / 2 {",
+      "        if s[i] != s[sz - 1 - i] {",
+      "            return false;",
+      "        }",
+      "    }",
+      "    true",
+      "}",
+    ]
+  }
+}
