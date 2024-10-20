@@ -1,1 +1,1 @@
-cp base.rs src/bin/b.rs
+git checkout src/bin/b.rs
