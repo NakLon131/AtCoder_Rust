@@ -1,0 +1,28 @@
+{
+  "is_dag_graph": {
+    "prefix": "is_dag_graph",
+    "body": [
+      "// 有向グラフの閉路なし検出。無向グラフの場合はひとつ前に戻らないようにすること",
+      "fn is_dag_graph(",
+      "    cpos: usize,",
+      "    uv: &Vec<Vec<usize>>,",
+      "    seen: &mut Vec<bool>, // 今既にみている頂点" ,
+      "    finished: &mut Vec<bool>, // 過去に既にみている頂点",
+      ") -> bool {",
+      "    let mut ret = true;",
+      "    seen[cpos] = true; // 行きがけに記録",
+      "    for &npos in &uv[cpos] {",
+      "        if finished[npos] {",
+      "            continue;",
+      "        }",
+      "        if seen[npos] {",
+      "            return false;",
+      "        }",
+      "        ret &= is_dag_graph(npos, uv, seen, finished);",
+      "    }",
+      "    finished[cpos] = true; // 帰りがけに記録",
+      "    ret",
+      "}"
+    ]
+  }
+}

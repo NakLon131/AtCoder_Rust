@@ -67,3 +67,9 @@ cargo test
 
 5. snippet部分を生成したファイルを置く。
 cargo snippet -t vscode > ~/wsl_work/Rust/AtCoder_Rust/.vscode/xxx.code-snippets
+
+6. サクラエディタで整形する。
+正規表現で置換。
+「^」を「"」　先頭に"を入れる
+「$」を「",」　末尾に",を入れる
+「\t」を「 」　タブをスペースにする
