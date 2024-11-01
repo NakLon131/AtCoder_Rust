@@ -1,0 +1,84 @@
+use std::mem::swap;
+use cargo_snippet::snippet;
+
+#[snippet]
+struct UnionFind {
+    size: Vec<usize>,
+    parent: Vec<isize>,
+}
+impl UnionFind {
+    fn new(n : usize) -> Self {
+        UnionFind { size : vec![1; n], parent : vec![-1; n] }
+    }
+    // 代表値を求める。(経路圧縮も行う)
+    #[allow(unused)]
+    fn find(&mut self, u: usize) -> usize {
+        let mut mut_u = u;
+        if self.parent[mut_u] == -1 { return mut_u; }
+        let mut vertices = Vec::new();
+        while self.parent[mut_u] >= 0 {
+            vertices.push(mut_u);
+            mut_u = self.parent[mut_u] as usize;
+        }
+        for &i in &vertices {
+            self.parent[i] = mut_u as isize;
+        }
+        mut_u
+    }
+    // 併合
+    fn merge(&mut self, u: usize, v: usize) -> bool {
+        // 代表値を取得
+        let mut x = self.find(u);
+        let mut y = self.find(v);
+        // 既に同じ集合
+        if x == y { return false; }
+        // 木のサイズが小さいものを大きいものに併合
+        if self.size[x] < self.size[y] {
+            swap(&mut x, &mut y);
+        }
+        self.parent[y] = x as isize;
+        self.size[x] += self.size[y];
+        true
+    }
+    // 同じ集合かどうかを判定
+    #[allow(unused)]
+    fn same(&mut self, u: usize, v: usize) -> bool {
+        self.find(u) == self.find(v)
+    }
+    // 集合のサイズを求める
+    #[allow(unused)]
+    fn size(&mut self, u: usize) -> usize {
+        let x = self.find(u);
+        self.size[x]
+    }
+}
+
+
+#[cfg(test)]
+mod tests {
+    // use super::*;
+
+    use crate::UnionFind;
+
+    #[test]
+    fn test1(){
+        // typical contest 001
+        let n = 8;
+        // let m = 9;
+        
+        let mut uf = UnionFind::new(n);
+        uf.merge(0, 1);
+        uf.merge(2, 1);
+        assert_eq!(true, uf.same(0, 2));
+        assert_eq!(false, uf.same(0, 3));
+        uf.merge(1, 3);
+        assert_eq!(true, uf.same(3, 0));
+        assert_eq!(false, uf.merge(3, 1)); // マージ済み
+        assert_eq!(false, uf.merge(0, 0)); // 自身とマージ不可
+        assert_eq!(true, uf.same(0, 0));
+    }
+}
+
+fn main() {
+    
+}
