@@ -5,9 +5,7 @@ fn main() {
 // const MOD17: usize = 1000000007;
 // const MOD93: usize = 998244353;
 // const INF: usize = 1 << 60;
-// let dx = vec![!0, 0, 1, 0]; // 上左下右
-// let dy = vec![0, !0, 0, 1]; // 上左下右
-// let d = vec!{(!0, 0), (0, !0), (1, 0), (0, 1)}; // 上左下右
+// const D : [(usize, usize); 4] = [(!0, 0), (0, !0), (1, 0), (0, 1)]; // 上左下右
 
 #[allow(unused)]
 use proconio::{input, marker::Chars, marker::Usize1};
@@ -31,9 +29,7 @@ use num::integer::gcd;
 use superslice::Ext;
 #[allow(unused)]
 use ac_library::{
-	Dsu,
-	FenwickTree
+	FenwickTree,
+	// ModInt998244353 as mint,
+	// ModInt1000000007 as mint
 };
-// 繰り返し二乗法もACLにあり
-// use ac_library::ModInt998244353 as mint;
-// use ac_library::ModInt1000000007 as mint;
