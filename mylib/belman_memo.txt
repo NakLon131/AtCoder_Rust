@@ -1,0 +1,56 @@
+// ABC061D
+// コスト最大化、ループ蟻
+fn main() {
+    input!{
+		n: usize, m: usize,
+		abv : [(Usize1, Usize1, i64); m],
+	}
+
+	// 有向グラフ(辺の重みを-1)
+	let mut g = vec![Vec::new(); n];
+	for &(a, b, v) in &abv {
+		g[a].push((b, -v));
+	}
+
+	// ベルマンフォード法 コスト最小化
+	let mut dist = vec![INF; n];
+	dist[0] = 0;
+	for _ in 0..n {
+		for cpos in 0..n {
+			// 未確定の箇所
+			if dist[cpos] == INF {continue;}
+
+			for npos in &g[cpos] {
+				// 最短距離更新
+				if dist[npos.0] > dist[cpos] + npos.1 {
+					dist[npos.0] = dist[cpos] + npos.1;
+				}
+			}
+		}
+	}
+	// ベルマンフォード法 頂点Nが負閉路に含まれるかを検出
+	let mut negative_loop = vec![false; n];
+	for _ in 0..n {
+		for cpos in 0..n {
+			// 未確定の箇所
+			if dist[cpos] == INF {continue;}
+
+			for npos in &g[cpos] {
+				// 最短距離更新
+				if dist[npos.0] > dist[cpos] + npos.1 {
+					dist[npos.0] = dist[cpos] + npos.1;
+					negative_loop[npos.0] = true;
+				}
+				if negative_loop[cpos] {
+					negative_loop[npos.0] = true;
+				}
+			}
+		}
+	}
+
+	if negative_loop[n-1] {
+		println!("inf");
+		return;
+	}
+	println!("{}", -1*dist[n-1]);
+}
