@@ -1,0 +1,99 @@
+// 鉄則本A68
+use std::cmp::min;
+use proconio::{input, marker::Usize1};
+
+
+// ネットワークフローのグラフ
+struct Graph {
+    edge: Vec<Vec<(usize, usize, usize)>>, // 頂点と辺情報
+    num_nodes: usize,
+}
+impl Graph {
+    // 新しいグラフを初期化
+    fn new(num_nodes: usize) -> Self {
+        Self {
+            edge: vec![Vec::new(); num_nodes],
+            num_nodes,
+        }
+    }
+
+    // 頂点u->vに向かう容量cの辺を追加
+    fn add_edge(&mut self, u: usize, v: usize, capacity: usize) {
+        let u_edges_count = self.edge[u].len(); // uの隣接辺数
+        let v_edges_count = self.edge[v].len(); // vの隣接辺数
+        self.edge[u].push((v, capacity, v_edges_count));
+        self.edge[v].push((u, 0, u_edges_count)); // 逆辺の容量は0に設定
+    }
+
+    // フローの実行
+    fn exec_flow(&mut self, fpos: usize, epos: usize, flow: usize, used: &mut Vec<bool>) -> usize {
+        // 目標に到達したらフローを返す
+        if fpos == epos { return flow; }
+        
+        used[fpos] = true;
+
+        // 次に進む頂点を調べる
+        for nxt in 0..self.edge[fpos].len() {
+            let (next_node, capacity, reverse_edge_index) = self.edge[fpos][nxt];
+            
+            // すでに訪れた頂点や容量がない辺をスキップ
+            if used[next_node] || capacity == 0 { continue; }
+
+            // フローを流せる場合、最小容量で流す
+            let cur_flow = self.exec_flow(next_node, epos, min(flow, capacity), used);
+            if cur_flow > 0 {
+                // 残余グラフの容量を更新
+                self.edge[fpos][nxt].1 -= cur_flow;
+                self.edge[next_node][reverse_edge_index].1 += cur_flow;
+                return cur_flow;
+            }
+        }
+		// 流せるフローが見つからなかった
+        0
+    }
+
+    // 最大のフローを求める
+    fn max_flow(&mut self, fpos: usize, epos: usize) -> usize {
+        const INFS: usize = 1 << 60;
+        let mut used = vec![false; self.num_nodes];
+        let mut total_flow = 0;
+        loop {
+            // DFSしてフローを流す
+            used.fill(false); // 訪問済み配列を初期化
+            let flow = self.exec_flow(fpos, epos, INFS, &mut used);
+
+			// もし流せるフローがなければ終了
+            if flow == 0 { break; }
+			// 流れたフローを加算
+            total_flow += flow;
+        }
+        total_flow
+    }
+}
+// フローを求めるトレイト
+#[allow(unused)]
+trait FlowAlgorithm {
+    fn max_flow(&mut self, fpos: usize, epos: usize) -> usize;
+}
+impl FlowAlgorithm for Graph {
+    fn max_flow(&mut self, fpos: usize, epos: usize) -> usize {
+        self.max_flow(fpos, epos)
+    }
+}
+
+
+fn main() {
+    input!{
+		n: usize, m: usize,
+		abc: [(Usize1, Usize1, usize); m],
+	}
+
+	// 残余グラフの初期化
+	let mut g = Graph::new(n);
+	for i in 0..m {
+		g.add_edge(abc[i].0, abc[i].1, abc[i].2);
+	}
+
+	// フローを流す
+	println!("{}", g.max_flow(0, n-1));
+}
