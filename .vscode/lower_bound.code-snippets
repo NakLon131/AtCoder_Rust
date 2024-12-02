@@ -18,5 +18,36 @@
       "    l",
       "}"
     ]
+  },
+  "lower_bound_kstep_val": {
+    "prefix": "lower_bound_kstep_val",
+    "body": [
+      "const INFS: usize = 1 << 60;",
+      "// 二分探索",
+      "// x以上の最小のposを返す ",
+      "pub fn lower_bound<T: std::cmp::PartialOrd>(vec: &Vec<T>, val: T) -> usize {",
+      "    let mut l = 0;",
+      "    let mut r = vec.len();",
+      "    while r - l > 0 {",
+      "        let m = (l + r) / 2;",
+      "        if vec[m] < val {",
+      "            l = m + 1;",
+      "        } else {",
+      "            r = m;",
+      "        }",
+      "    }",
+      "    l",
+      "}",
+      "// 二分探索でk個先の値を取得",
+      "pub fn lower_bound_kstep_val(vec: &Vec<usize>, val: usize, k: usize) -> usize {",
+      "    if k == 0 { return val; } // 0個先は今の値を返す",
+      "    let onestep_pos = lower_bound(vec, val);",
+      "    let kstep_pos = onestep_pos + k - 1;",
+      "    if kstep_pos >= vec.len() {",
+      "        return INFS;",
+      "    }",
+      "    vec[kstep_pos]",
+      "}",
+    ]
   }
 }
