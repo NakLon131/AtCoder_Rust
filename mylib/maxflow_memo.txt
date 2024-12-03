@@ -4,11 +4,11 @@ use proconio::{input, marker::Usize1};
 
 
 // ネットワークフローのグラフ
-struct Graph {
+struct MaxFlowGraph {
     edge: Vec<Vec<(usize, usize, usize)>>, // 頂点と辺情報
     num_nodes: usize,
 }
-impl Graph {
+impl MaxFlowGraph {
     // 新しいグラフを初期化
     fn new(num_nodes: usize) -> Self {
         Self {
@@ -19,14 +19,14 @@ impl Graph {
 
     // 頂点u->vに向かう容量cの辺を追加
     fn add_edge(&mut self, u: usize, v: usize, capacity: usize) {
-        let u_edges_count = self.edge[u].len(); // uの隣接辺数
-        let v_edges_count = self.edge[v].len(); // vの隣接辺数
-        self.edge[u].push((v, capacity, v_edges_count));
-        self.edge[v].push((u, 0, u_edges_count)); // 逆辺の容量は0に設定
+        let u_edge_index = self.edge[u].len(); // uの隣接辺数
+        let v_edge_index = self.edge[v].len(); // vの隣接辺数
+        self.edge[u].push((v, capacity, v_edge_index));
+        self.edge[v].push((u, 0, u_edge_index)); // 逆辺の容量は0に設定
     }
 
     // フローの実行
-    fn exec_flow(&mut self, fpos: usize, epos: usize, flow: usize, used: &mut Vec<bool>) -> usize {
+    fn _exec_flow(&mut self, fpos: usize, epos: usize, flow: usize, used: &mut Vec<bool>) -> usize {
         // 目標に到達したらフローを返す
         if fpos == epos { return flow; }
         
@@ -34,17 +34,17 @@ impl Graph {
 
         // 次に進む頂点を調べる
         for nxt in 0..self.edge[fpos].len() {
-            let (next_node, capacity, reverse_edge_index) = self.edge[fpos][nxt];
+            let (npos, capacity, next_edge_index) = self.edge[fpos][nxt];
             
             // すでに訪れた頂点や容量がない辺をスキップ
-            if used[next_node] || capacity == 0 { continue; }
+            if used[npos] || capacity == 0 { continue; }
 
             // フローを流せる場合、最小容量で流す
-            let cur_flow = self.exec_flow(next_node, epos, min(flow, capacity), used);
+            let cur_flow = self._exec_flow(npos, epos, min(flow, capacity), used);
             if cur_flow > 0 {
                 // 残余グラフの容量を更新
                 self.edge[fpos][nxt].1 -= cur_flow;
-                self.edge[next_node][reverse_edge_index].1 += cur_flow;
+                self.edge[npos][next_edge_index].1 += cur_flow;
                 return cur_flow;
             }
         }
@@ -60,7 +60,7 @@ impl Graph {
         loop {
             // DFSしてフローを流す
             used.fill(false); // 訪問済み配列を初期化
-            let flow = self.exec_flow(fpos, epos, INFS, &mut used);
+            let flow = self._exec_flow(fpos, epos, INFS, &mut used);
 
 			// もし流せるフローがなければ終了
             if flow == 0 { break; }
@@ -75,7 +75,7 @@ impl Graph {
 trait FlowAlgorithm {
     fn max_flow(&mut self, fpos: usize, epos: usize) -> usize;
 }
-impl FlowAlgorithm for Graph {
+impl FlowAlgorithm for MaxFlowGraph {
     fn max_flow(&mut self, fpos: usize, epos: usize) -> usize {
         self.max_flow(fpos, epos)
     }
@@ -89,7 +89,7 @@ fn main() {
 	}
 
 	// 残余グラフの初期化
-	let mut g = Graph::new(n);
+	let mut g = MaxFlowGraph::new(n);
 	for i in 0..m {
 		g.add_edge(abc[i].0, abc[i].1, abc[i].2);
 	}
