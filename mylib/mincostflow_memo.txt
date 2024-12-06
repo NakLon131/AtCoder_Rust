@@ -1,0 +1,75 @@
+// ACL E 
+use ac_library::MinCostFlowGraph;
+
+fn main() {
+    input!{
+		n: usize, k: i64,
+		a: [[i64; n]; n],
+	}
+	// s, 縦番号(1^N), 横番号(N+1 ~ 2N), t
+	let mut mf = MinCostFlowGraph::<i64>::new(2*n+2);
+	mf.add_edge(0, 2*n+1, INF, INF);
+
+	// sと縦のマッチング
+	for i in 0..n {
+		mf.add_edge(0, i+1, k, 0);
+	}
+	// 横とtのマッチング
+	for i in 0..n {
+		mf.add_edge(n+i+1, 2*n+1, k, 0);
+	}
+
+	let mut edges = vec![];
+	// 縦と横のマッチング(辺も記録)
+	for i in 0..n {
+		for j in 0..n {
+			edges.push(mf.add_edge(i+1, n+j+1, 1, INF - a[i][j]));
+		}
+	}
+
+	let res = mf.flow(0, 2*n+1, INF);
+	println!("{}", INF * res.0 - res.1);
+	
+	let mut state = vec![vec!['.'; n]; n];
+	for e in edges {
+		let e = mf.get_edge(e);
+		if e.flow > 0 {
+			state[e.from-1][e.to-1 - n] = 'X';
+		}
+	}
+	println!("{}", state.into_iter().map(|s| s.iter().collect::<String>()).join("\n"));
+
+}
+
+
+// const MOD17: usize = 1000000007;
+// const MOD93: usize = 998244353;
+const INF: i64 = 1 << 30;
+// const D : [(usize, usize); 4] = [(!0, 0), (0, !0), (1, 0), (0, 1)]; // 上左下右
+
+#[allow(unused)]
+use proconio::{input, marker::Chars, marker::Usize1};
+
+#[allow(unused)]
+use std::{
+	mem::swap,
+	cmp::min, cmp::max,
+	cmp::Reverse,
+	collections::HashSet, collections::BTreeSet,
+	collections::HashMap, collections::BTreeMap,
+	collections::BinaryHeap,
+	collections::VecDeque,
+	iter::FromIterator,
+};
+#[allow(unused)]
+use itertools::Itertools;
+#[allow(unused)]
+use num::integer::gcd;
+#[allow(unused)]
+use superslice::Ext;
+#[allow(unused)]
+use ac_library::{
+	FenwickTree,
+	// ModInt998244353 as mint,
+	// ModInt1000000007 as mint
+};
