@@ -1,3 +1,122 @@
+// アルゴリズム上級本のF問題
+fn main() {
+	input!{
+		v: usize, e: usize, mut f: i64,
+	}
+	let mut mf = MinCostFlowGraph::new(v, e);
+	for _ in 0..e {
+		input!{
+			from: Usize1, to: Usize1, cap: i64, cost: i64,
+		}
+		mf.add_edge(from, to, cap, cost);
+	}
+	println!("{}", mf.calc_min_cost_flow(0, v-1, &mut f));
+}
+
+const INFS: i64 = 1 << 60;
+// 最小費用流
+struct MinCostFlowGraph {
+	edge_list: Vec<Vec<(usize, i64, i64, usize)>>,
+	verb_cnt: usize,
+	edge_cnt: usize
+}
+impl MinCostFlowGraph {
+	// 新しいグラフを作成する
+	fn new(verb_cnt: usize, edge_cnt: usize) -> Self {
+		Self {
+			edge_list: vec![Vec::new(); verb_cnt],
+			verb_cnt,
+			edge_cnt
+		}
+	}
+	// 辺を追加する
+	fn add_edge(&mut self, u: usize, v: usize, cap: i64, cost: i64) {
+		let u_len = self.edge_list[u].len();
+        let v_len = self.edge_list[v].len();
+        self.edge_list[u].push((v, cap, cost, v_len));
+        self.edge_list[v].push((u, 0, -cost, u_len)); // 逆辺の容量は0に設定
+	}
+	// ベルマンフォード法で各頂点への最短距離を計算する
+	fn bellmanford(&self, spos: usize) 
+		-> (Vec<i64>, Vec<usize>,Vec<usize>) {
+
+		let mut dist = vec![INFS; self.verb_cnt];
+		dist[spos] = 0;
+		
+		let mut p_v = vec![INFS as usize; self.verb_cnt]; // 出発元-頂点
+		let mut p_e = vec![INFS as usize; self.edge_cnt]; // 出発元-辺
+
+		loop {
+			let mut update = false;
+			for cpos in 0..self.verb_cnt {
+				// 未到達の頂点から、始めない
+				if dist[cpos] == INFS { continue; }
+				let sz = self.edge_list[cpos].len();
+				for e_index in 0..sz {
+					let (npos, cap, cost, _sz) = self.edge_list[cpos][e_index];
+					// 流すことができる辺で、最短コストを更新出来る
+					if cap > 0 && dist[npos] > dist[cpos] + cost {
+						dist[npos] = dist[cpos] + cost;
+						update = true;
+						p_v[npos] = cpos;
+						p_e[npos] = e_index;
+					}
+				}
+			}
+			if !update { break; }
+		}
+		(dist, p_v, p_e)
+	}
+
+	fn calc_min_cost_flow(&mut self, spos: usize, epos: usize, f: &mut i64) -> i64{
+		let mut ret = 0;
+		while *f > 0 {
+			// ベルマンフォード法により、最小コストでsから流す
+			let (dist, p_v , p_e) = self.bellmanford(spos);
+			
+			// 到達不可
+			if dist[epos] == INFS { return INFS;}
+			
+			// 流す量を取得
+			let mut flow = *f;
+			
+			// spos -> eposの経路上の頂点の最小コストを取得
+			let mut pass_pos = epos;
+			while pass_pos != spos {
+				flow = min(flow, self.edge_list[p_v[pass_pos]][p_e[pass_pos]].1);
+				pass_pos = p_v[pass_pos];
+			}
+
+			// 発生した費用(流す量 * 最小コスト)を加算
+			ret += flow * dist[epos];
+			*f -= flow;
+	
+			// spos -> eposの経路上の辺の残余グラフの更新
+			pass_pos = epos;
+			while pass_pos != spos {
+				self.edge_list[p_v[pass_pos]][p_e[pass_pos]].1 -= flow;
+				let rev = self.edge_list[p_v[pass_pos]][p_e[pass_pos]].3;
+				self.edge_list[pass_pos][rev].1 += flow;
+				pass_pos = p_v[pass_pos];
+			}
+		}
+		ret
+	}
+}
+// 最小費用流を計算するトレイト
+#[allow(unused)]
+trait MinCostFlow {
+    fn calc_min_cost_flow(&mut self, spos: usize, epos: usize, f: &mut i64) -> i64;
+}
+impl MinCostFlow for MinCostFlowGraph {
+    fn calc_min_cost_flow(&mut self, spos: usize, epos: usize, f: &mut i64) -> i64 {
+        self.calc_min_cost_flow(spos, epos, f)
+    }
+}
+
+
+
+
 // ACL E 
 use ac_library::MinCostFlowGraph;
 

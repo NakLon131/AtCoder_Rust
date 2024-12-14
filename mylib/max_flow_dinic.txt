@@ -23,14 +23,14 @@ impl MaxFlowGraph {
         self.edge_list[v].push((u, 0, u_len)); // 逆辺の容量は0に設定
     }
     // BFSで各頂点の距離を計算する
-    fn bfs(&self, spos: usize, _verb: usize) -> Vec<i64> {
+    fn bfs(&self, spos: usize) -> Vec<i64> {
         let mut dist = vec![-1; self.verb_cnt];
         dist[spos] = 0;
         let mut dq = VecDeque::new();
         dq.push_back(spos);
         while dq.len() > 0 {
 			let cpos = dq.pop_front().unwrap();
-            for &(npos, cap, _) in &self.edge_list[cpos] {
+            for &(npos, cap, _sz) in &self.edge_list[cpos] {
                 if cap > 0 && dist[npos] < 0 {
                     dist[npos] = dist[cpos] + 1;
                     dq.push_back(npos);
@@ -40,14 +40,14 @@ impl MaxFlowGraph {
         dist
     }
     // DFSでフローを流す
-    fn dfs(&mut self, cpos: usize, verb: usize, flow: usize, removed: &mut Vec<usize>, dist: &Vec<i64>) -> usize {
-        if cpos == verb {
+    fn dfs(&mut self, cpos: usize, epos: usize, flow: usize, removed: &mut Vec<usize>, dist: &Vec<i64>) -> usize {
+        if cpos == epos {
             return flow;
         }
         while removed[cpos] < self.edge_list[cpos].len() {
             let &(npos, cap, rev_edge) = &self.edge_list[cpos][removed[cpos]];
             if cap > 0 && dist[cpos] < dist[npos] {
-                let flow = self.dfs(npos, verb, min(flow, cap), removed, dist);
+                let flow = self.dfs(npos, epos, min(flow, cap), removed, dist);
                 if flow > 0 {
                     self.edge_list[cpos][removed[cpos]].1 -= flow;
                     self.edge_list[npos][rev_edge].1 += flow;
@@ -60,16 +60,16 @@ impl MaxFlowGraph {
     }
 
     // 最大流を計算する
-    fn calc_max_flow(&mut self, spos: usize, verb: usize) -> usize {
+    fn calc_max_flow(&mut self, spos: usize, epos: usize) -> usize {
         let mut tot_flow = 0;
         loop {
-            let dist = self.bfs(spos, verb);
-            if dist[verb] < 0 {
+            let dist = self.bfs(spos);
+            if dist[epos] < 0 {
                 return tot_flow;
             }
             let mut removed = vec![0; self.verb_cnt];
             loop {
-                let flow = self.dfs(spos, verb, usize::MAX, &mut removed, &dist);
+                let flow = self.dfs(spos, epos, usize::MAX, &mut removed, &dist);
                 if flow == 0 {
                     break;
                 }
@@ -82,11 +82,11 @@ impl MaxFlowGraph {
 // 最大流を計算するトレイト
 #[allow(unused)]
 trait MaxFlow {
-    fn calc_max_flow(&mut self, spos: usize, verb: usize) -> usize;
+    fn calc_max_flow(&mut self, spos: usize, epos: usize) -> usize;
 }
 impl MaxFlow for MaxFlowGraph {
-    fn calc_max_flow(&mut self, spos: usize, verb: usize) -> usize {
-        self.calc_max_flow(spos, verb)
+    fn calc_max_flow(&mut self, spos: usize, epos: usize) -> usize {
+        self.calc_max_flow(spos, epos)
     }
 }
 
