@@ -30,7 +30,8 @@ mod tests {
 
     #[test]
     fn test1(){
-        let primes = prime_list(101);
+        // 2*10^6 -> 素数は148933個
+        let primes = prime_list(2_000_000);
         print!("{}", primes.len());
         // assert_eq!(26, primes.len());
     }

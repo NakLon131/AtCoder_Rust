@@ -1,0 +1,45 @@
+use cargo_snippet::snippet;
+
+#[snippet]
+pub fn func() {
+    // todo
+    return;
+}
+
+#[cfg(test)]
+mod tests {
+    // use super::*;
+
+    #[test]
+    fn test1(){
+        // todo
+        assert_eq!(0, 0);
+    }
+}
+
+use std::cmp::max;
+fn main(){
+    const COMB_MAX : usize = 1_000_000;
+    let mut k_max = 0;
+    let mut comb_k_max = 0;
+
+    // 二項係数の検証
+    for n in 1..=COMB_MAX {
+        // n_C_0 = 1;
+        let mut k = 0;
+        let mut comb_val = 1;
+        // println!("{}_C_{} = {}", n, k, comb_val);
+        
+        // n_C_kを順番に試す
+        while k+1 <= (n + 1)/2 && comb_val * (n-k) / (k+1) <= COMB_MAX{
+            comb_val *= n-k;
+            comb_val /= k+1;
+            k += 1;
+            // println!("{}_C_{} = {}", n, k, comb_val);
+            comb_k_max = max(comb_k_max, comb_val * k);
+        }
+        k_max = max(k_max, k);   
+    }
+    println!("k_max = {}", k_max);              // k = 11
+    println!("comb_k_max = {}", comb_k_max);    // nCk * k = 7759752
+}
