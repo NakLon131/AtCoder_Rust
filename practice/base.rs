@@ -12,6 +12,7 @@ fn main() {
 
 // const MOD17: usize = 1000000007;
 // const MOD93: usize = 998244353;
+// const INV2: usize = 499122177; // MOD93の剰余世界では、1/2の代わりにこれを掛ける
 // const INF: usize = 1 << 60;
 // const D : [(usize, usize); 4] = [(!0, 0), (0, !0), (1, 0), (0, 1)]; // 上左下右
 
