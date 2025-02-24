@@ -31,6 +31,16 @@ contest_submit() {
 	cargo compete submit $NO --release
 }
 
+# テスト提出
+# cargo compete submit force xxx
+contest_submit_force() {
+	EXAM=$1
+	NO=$2
+	RELEASE=$3
+	cd $EXAM
+	cargo compete submit --no-test $NO --release
+}
+
 # コードコピー
 # cat *.rs | xsel --clipboard --input
 code_copy() {
@@ -59,4 +69,10 @@ elif [ $1 = "s" ]; then
 	#	code_copy $2 $3
 	#	echo ソースコードをコピーしました。
 	#fi
+elif [ $1 = "sf" ]; then
+	if [ $# -lt 3 ]; then
+		echo 問題番号を指定してください
+		exit 1
+	fi
+	contest_submit_force $2 $3 $4
 fi
