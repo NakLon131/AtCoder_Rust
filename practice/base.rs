@@ -17,7 +17,7 @@ fn main() {
 // const D : [(usize, usize); 4] = [(!0, 0), (0, !0), (1, 0), (0, 1)]; // 上左下右
 
 #[allow(unused)]
-use proconio::{input, marker::Chars, marker::Usize1};
+use proconio::{input, input_interactive,marker::Chars, marker::Usize1};
 
 #[allow(unused)]
 use std::{

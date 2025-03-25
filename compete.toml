@@ -33,7 +33,7 @@ fn main() {
 // const D4 : [(usize, usize); 4] = [(!0, 0), (0, !0), (1, 0), (0, 1)]; // 上左下右
 
 #[allow(unused)]
-use proconio::{input, marker::Chars, marker::Usize1};
+use proconio::{input, input_interactive, marker::Chars, marker::Usize1};
 
 #[allow(unused)]
 use std::{
@@ -105,7 +105,7 @@ either = "=1.5.3"
 im-rc = "=14.3.0"
 fixedbitset = "=0.2.0"
 bitset-fixed = "=0.1.0"
-proconio = { version = "=0.3.6", features = ["derive"] }
+proconio = { version = "=0.4.5", features = ["derive"] }
 text_io = "=0.1.8"
 whiteread = "=0.5.0"
 rustc-hash = "=1.1.0"
