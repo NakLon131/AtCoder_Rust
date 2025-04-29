@@ -1,0 +1,1 @@
+cp base_rs/atcoder.rs src/main.rs
