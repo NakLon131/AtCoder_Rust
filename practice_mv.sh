@@ -1,1 +1,0 @@
-mv practice/done/* ../../AtCoders/Practice/

@@ -1,1 +1,0 @@
-git checkout src/bin/b.rs
