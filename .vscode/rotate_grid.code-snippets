@@ -1,0 +1,21 @@
+{
+  "rotate_grid": {
+    "prefix": "rotate_grid",
+    "body": [
+      "pub fn rotate_grid(h: usize, w: usize, s: &mut Vec<Vec<char>>, isleft: bool){",
+      "    // 右回転なら1度、左回転なら3度実施",
+      "    let k = if isleft {3} else {1};",
+      "    let mut ret = vec![vec!['.'; h]; w];",
+      "    for _ in 0..k {",
+      "        // 90度回転",
+      "        for i in 0..h {",
+      "            for j in 0..w {",
+      "                ret[j][h - 1 - i] = s[i][j];",
+      "            }",
+      "        }",
+      "    }",
+      "    swap(s, &mut ret)",
+      "}",
+    ]
+  }
+}
