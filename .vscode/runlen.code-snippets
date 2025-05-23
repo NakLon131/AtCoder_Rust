@@ -1,9 +1,9 @@
 {
-  "ranglen": {
-    "prefix": "ranglen",
+  "runlen": {
+    "prefix": "runlen",
     "body": [
       "// ランレングス圧縮",
-      "pub fn ranglen(arr: &Vec<char>) -> Vec<(char, usize)> {",
+      "pub fn runlen(arr: &Vec<char>) -> Vec<(char, usize)> {",
       "    let len = arr.len();",
       "    let mut arr_ret = Vec::new();",
       "    let mut tail = 0;",
@@ -17,7 +17,8 @@
       "        tail = top;",
       "    }",
       "    arr_ret",
-      "}"
+      "}",
+
     ]
   }
 }
