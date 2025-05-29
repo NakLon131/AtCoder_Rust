@@ -58,6 +58,19 @@ use ac_library::{
 	// ModInt998244353 as mint,
 	// ModInt1000000007 as mint
 };
+#[allow(unused)]
+fn dbg_print_mp(mp: &HashMap<usize, usize>) {
+    for (&k, &v) in mp { println!("key:{} val:{}", k, v); }
+}
+#[allow(unused)]
+fn dbg_print_grid(h: usize, w: usize, grid: &Vec<Vec<char>>) {
+    for i in 0..h { for j in 0..w { print!("{}", grid[i][j]); } println!(); }
+}
+#[allow(unused)]
+fn dbg_print_dist(h: usize, w: usize, dist: &Vec<Vec<usize>>) {
+    let limit = 255;
+    for i in 0..h { for j in 0..w { print!("{:03} ", min(dist[i][j], limit)); } println!(); }
+}
 '''
 
 [template.new]
