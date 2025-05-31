@@ -1,6 +1,6 @@
 {
-  "eratos": {
-    "prefix": "eratos",
+  "prime_list": {
+    "prefix": "prime_list",
     "body": [
       "// エラトステネスの篩による素数リスト",
       "pub fn prime_list(x: usize) -> Vec<usize> {",
@@ -27,5 +27,25 @@
       "    ret",
       "}"
     ]
-  }
+  },
+  "divisor_list": {
+    "prefix": "divisor_list",
+    "body": [
+      "// エラトステネスの篩を利用した約数列挙",
+      "pub fn divisor_list(x: usize) -> Vec<usize> {  ",
+      "    let mut cnt = vec![1; x + 1];",
+      "    cnt[0] = 0;",
+      "    ",
+      "    for i in 2..=x {",
+      "        let mut now = i;",
+      "        while now <= x {",
+      "            cnt[now] += 1;",
+      "            now += i;",
+      "        }",
+      "    }",
+      "    cnt",
+      "}"
+    ]
+  },
+
 }
