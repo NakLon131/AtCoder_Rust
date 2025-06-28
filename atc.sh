@@ -64,15 +64,23 @@ elif [ $1 = "s" ]; then
 		exit 1
 	fi
 	contest_submit $2 $3 $4
-	# ret=$(contest_test $2 $3 $4)
-	# if [ $? -eq 0 ]; then
-	#	code_copy $2 $3
-	#	echo ソースコードをコピーしました。
-	#fi
+
 elif [ $1 = "sf" ]; then
 	if [ $# -lt 3 ]; then
 		echo 問題番号を指定してください
 		exit 1
 	fi
 	contest_submit_force $2 $3 $4
+
+elif [ $1 = "sc" ]; then
+	if [ $# -lt 3 ]; then
+		echo 問題番号を指定してください
+		exit 1
+	fi
+	ret=$(contest_test $2 $3 $4)
+	if [ $? -eq 0 ]; then
+		code_copy $2 $3
+		echo ソースコードをコピーしました。
+	fi
+
 fi
