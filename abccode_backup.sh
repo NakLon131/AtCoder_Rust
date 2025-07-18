@@ -11,4 +11,4 @@ TIME=`date +"%H%M%S"`
 cp $1/src/bin/$2.rs $1/src/bin/$2_$TIME.rs
 
 # reset
-cp $1/src/bin/g.rs $1/src/bin/$2.rs
+cp $1/src/bin/z.rs $1/src/bin/$2.rs
