@@ -1,0 +1,23 @@
+// 重複
+let sequences = std::iter::repeat(items.iter())
+	.take(r)
+	.multi_cartesian_product();
+for seq in sequences {
+	println!("{}", seq.iter().join(" "));
+}
+
+// 順序あり
+let items = vec![1, 2, 3];
+let r = 2;
+let result = items.iter().cloned().combinations_with_replacement(r);
+for item in result { println!("{}", item.iter().join(" ")); }
+
+// 順列
+for perm in (1..=n).permutations(k) {
+	println!("{}", perm.iter().join(" "));
+}
+
+// 組み合わせ
+for comb in (1..=n).combinations(k) {
+	println!("{}", comb.iter().join(" "));
+}

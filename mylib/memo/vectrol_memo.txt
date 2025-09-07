@@ -16,3 +16,16 @@
 		a.0 * b.1 - a.1 * b.0
 	}
 }
+
+// 2点から、直線の方程式(ax+by+c=0)を求める
+fn calc_equation_straight_line(i: Pos, j: Pos) -> StraightLine {
+    let a = -(i.y - j.y);
+    let b = i.x - j.x;
+    let c = i.y * j.x - i.x * j.y;
+
+    StraightLine {a, b, c}
+}
+// 同一直線上にある点かどうかを判定
+fn is_same_stright_line(i: Pos, line: &StraightLine) -> bool {
+    line.a * i.x + line.b * i.y + line.c == 0
+}
