@@ -9,3 +9,4 @@ superslice = "=1.0.0"
 itertools = "=0.9.0"
 ac-library-rs = "0.1.1"
 proconio = { version = "=0.4.5", features = ["derive"] }
+rand = "0.8.5"

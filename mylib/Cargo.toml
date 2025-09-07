@@ -1,11 +1,11 @@
 [package]
 name = "mylib"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 cargo-snippet = "0.6.5"
 ac-library-rs = "0.1.1"
-rand = "0.6"
+rand = "0.8.5"

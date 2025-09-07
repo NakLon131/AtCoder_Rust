@@ -1,4 +1,6 @@
 use cargo_snippet::snippet;
+use rand::Rng;
+//use Rand::Rng;
 
 #[snippet]
 pub fn prime_list(x: usize) -> Vec<usize> {
@@ -37,6 +39,10 @@ mod tests {
     }
 }
 
+
 fn main() {
-    
+    let mut x = rand::thread_rng();
+    let i = x.gen_range(0..100);
+
+    println!("{}", i);
 }
