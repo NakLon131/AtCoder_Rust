@@ -1,0 +1,17 @@
+#[derive(Clone)]
+struct MoveInfo {
+    left: bool,
+    right: bool,
+}
+
+fn make_graph(n: usize, l: &Vec<usize>) -> Vec<MoveInfo> {
+    let mut graph = vec![MoveInfo{left: false, right: false}; n+1];    
+    for i in 0..n {
+        // ドアが開いている場合は、行き来可能
+        if l[i] == 0 {
+            graph[i].right = true;
+            graph[i+1].left = true;
+        }
+    }
+    graph
+}

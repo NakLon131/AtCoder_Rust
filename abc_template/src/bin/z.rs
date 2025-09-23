@@ -9,7 +9,7 @@ fn main() {
 // const D: [Pos; 4] = [Pos{x:!0, y:0}, Pos{x:0, y:!0}, Pos{x:1, y:0}, Pos{x:0, y:1}]; // 上左下右
 
 #[allow(unused)]
-#[derive(Clone)]
+#[derive(PartialEq, Eq, PartialOrd, Ord, Clone)]
 struct Pos {
     x: usize,
     y: usize,
