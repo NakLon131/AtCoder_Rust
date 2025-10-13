@@ -7,9 +7,10 @@ fn main() {
 // const INV2: usize = 499122177; // MOD93の剰余世界では、1/2の代わりにこれを掛ける
 // const INF: usize = 1 << 60;
 // const D: [Pos; 4] = [Pos{x:!0, y:0}, Pos{x:0, y:!0}, Pos{x:1, y:0}, Pos{x:0, y:1}]; // 上左下右
+// const D: [(usize, usize); 4] = [(!0, 0), (1, 0), (0, !0), (0, 1)]; // 上左下右
 
 #[allow(unused)]
-#[derive(Clone)]
+#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Clone)]
 struct Pos {
     x: usize,
     y: usize,
