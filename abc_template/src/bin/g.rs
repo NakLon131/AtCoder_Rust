@@ -8,6 +8,8 @@ fn main() {
 // const INF: usize = 1 << 60;
 // const D: [Pos; 4] = [Pos{x:!0, y:0}, Pos{x:0, y:!0}, Pos{x:1, y:0}, Pos{x:0, y:1}]; // 上左下右
 // const D: [(usize, usize); 4] = [(!0, 0), (1, 0), (0, !0), (0, 1)]; // 上左下右
+// const D4 : [Pos; 4] = [(-1, 0), (0, -1), (0, 1), (1, 0)];// 上左下右
+// fn us(x: i32) -> usize { x as usize }
 
 #[allow(unused)]
 #[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Clone)]
@@ -33,7 +35,7 @@ use std::{
 #[allow(unused)]
 use itertools::Itertools;
 #[allow(unused)]
-use num::integer::gcd;
+use num::{integer::gcd, Signed};
 #[allow(unused)]
 use superslice::Ext;
 #[allow(unused)]
