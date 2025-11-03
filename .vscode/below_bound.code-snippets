@@ -4,7 +4,7 @@
     "body": [
       "const INFS: usize = 1 << 60;",
       "// 二分探索",
-      "// x以下の最大のposを返す。0番目より小さい値では異常値として、「1<<60」を返す",
+      "// val以下の最大のposを返す。0番目より小さい値では異常値として、「1<<60」を返す",
       "pub fn below_bound<T: std::cmp::PartialOrd>(vec: &Vec<T>, val: T) -> usize {",
       "    let mut l = 0;",
       "    let mut r = vec.len();",

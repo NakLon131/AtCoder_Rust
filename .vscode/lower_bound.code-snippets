@@ -3,7 +3,7 @@
     "prefix": "lower_bound",
     "body": [
       "// 二分探索",
-      "// x以上の最小のposを返す ",
+      "// val以上の最小のposを返す ",
       "pub fn lower_bound<T: std::cmp::PartialOrd>(vec: &Vec<T>, val: T) -> usize {",
       "    let mut l = 0;",
       "    let mut r = vec.len();",
@@ -24,7 +24,7 @@
     "body": [
       "const INFS: usize = 1 << 60;",
       "// 二分探索",
-      "// x以上の最小のposを返す ",
+      "// val以上の最小のposを返す ",
       "pub fn lower_bound<T: std::cmp::PartialOrd>(vec: &Vec<T>, val: T) -> usize {",
       "    let mut l = 0;",
       "    let mut r = vec.len();",
