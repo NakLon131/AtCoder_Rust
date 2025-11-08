@@ -17,6 +17,7 @@
     "body": [
       "// 繰り返し二乗法",
       "fn mod_pow(mut a: usize, mut b: usize, mods: usize) -> usize {",
+      "    a %= mods;",
       "    let mut res = 1;",
       "    while b > 0 {",
       "        if b % 2 == 1 {",
@@ -30,5 +31,17 @@
       "    res",
       "}"
     ]
-  }
+  },
+  "large_mod_pow": {
+    "prefix": "large_mod_pow",
+    "body": [
+      "// 繰り返し二乗法(a^(b^c))",
+      "fn large_mod_pow(a: usize, b: usize, c: usize, mods: usize) -> usize {",
+      "    // b^c=rを計算 -> aの指数計算用に小さい値に置き換える",
+      "    let r = mod_pow(b, c, mods-1);",
+      "    // a^rを計算",
+      "    mod_pow(a, r, mods)",
+      "}",
+    ]
+  },
 }
