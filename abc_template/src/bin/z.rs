@@ -24,7 +24,15 @@ enum Direction {
     DOWN = 2,
     RIGHT = 3,
 }
-
+#[allow(unused)]
+#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Clone)]
+struct LoopCount {
+    ans: usize, // 答え
+    step: usize, // 残りステップ
+    pos: usize, // 現在位置
+    cycle_len: usize, // サイクル数
+    cycle_add: usize, // サイクルによる増加
+}
 #[allow(unused)]
 use proconio::{input, input_interactive, marker::Chars, marker::Usize1};
 
