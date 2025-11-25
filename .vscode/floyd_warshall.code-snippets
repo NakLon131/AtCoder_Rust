@@ -1,0 +1,38 @@
+{
+  "floyd_warshall": {
+    "prefix": "warshall",
+    "body": [
+      "// ワーシャルフロイド法",
+      "const INF: i64 = 1 << 60;",
+      "struct FloydWarshall {",
+      "    n: usize, // 頂点",
+      "    min_dist: Vec<Vec<i64>>, // 頂点(i,j)の最短距離",
+      "}",
+      "impl FloydWarshall {",
+      "    // 初期化",
+      "    pub fn new(n: usize) -> Self {",
+      "        let mut min_dist = vec![vec![INF; n]; n];",
+      "        for i in 0..n { min_dist[i][i] = 0; } // 自身への移動は0とする",
+      "        FloydWarshall { n, min_dist}",
+      "    }",
+      "    // 辺の情報をセット",
+      "    pub fn set_adge(&mut self, from: usize, to: usize, cost: i64) {",
+      "        self.min_dist[from][to] = cost;",
+      "    }",
+      "",
+      "    // 全点間の最短を計算",
+      "    pub fn calc_all_min_dist(&mut self) {",
+      "        for mid in 0..self.n {",
+      "            for from in 0..self.n {",
+      "                for to in 0..self.n {",
+      "                    self.min_dist[from][to] = ",
+      "                    min(self.min_dist[from][to], ",
+      "                        self.min_dist[from][mid] + self.min_dist[mid][to]);",
+      "                }",
+      "            }",
+      "        }",
+      "    }",
+      "}",
+    ]
+  }
+}
