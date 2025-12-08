@@ -54,6 +54,8 @@ use num::{integer::gcd, Signed};
 #[allow(unused)]
 use superslice::Ext;
 #[allow(unused)]
+use rand::Rng;
+#[allow(unused)]
 use ac_library::{
     FenwickTree
     // ModInt998244353 as mint,

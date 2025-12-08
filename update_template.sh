@@ -16,3 +16,5 @@ cd abc_template/src/bin/
 for item in "${items[@]}" ; do
 	cp z.rs $item
 done
+cd ../../../
+cp abc_template/src/bin/z.rs work/src/main.rs

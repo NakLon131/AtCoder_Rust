@@ -7,8 +7,8 @@ fn main() {
 // const INV2: usize = 499122177; // MOD93の剰余世界では、1/2の代わりにこれを掛ける
 // const INF: usize = 1 << 60;
 // const D: [Pos; 4] = [Pos{x:!0, y:0}, Pos{x:0, y:!0}, Pos{x:1, y:0}, Pos{x:0, y:1}]; // 上左下右
-// const D: [(usize, usize); 4] = [(!0, 0), (1, 0), (0, !0), (0, 1)]; // 上左下右
-// const D4 : [Pos; 4] = [(-1, 0), (0, -1), (0, 1), (1, 0)];// 上左下右
+// const D: [(usize, usize); 4] = [(!0, 0), (0, !0), (1, 0), (0, 1)]; // 上左下右
+// const D4 : [Pos; 4] = [(-1, 0), (0, -1), (1, 0), (0, 1)];// 上左下右
 // fn us(x: i32) -> usize { x as usize }
 
 #[allow(unused)]
@@ -17,7 +17,22 @@ struct Pos {
     x: usize,
     y: usize,
 }
-
+#[allow(unused)]
+enum Direction {
+    UP = 0,
+    LEFT = 1,
+    DOWN = 2,
+    RIGHT = 3,
+}
+#[allow(unused)]
+#[derive(PartialEq, Eq, PartialOrd, Ord, Hash, Clone)]
+struct LoopCount {
+    ans: usize, // 答え
+    step: usize, // 残りステップ
+    pos: usize, // 現在位置
+    cycle_len: usize, // サイクル数
+    cycle_add: usize, // サイクルによる増加
+}
 #[allow(unused)]
 use proconio::{input, input_interactive, marker::Chars, marker::Usize1};
 
@@ -38,6 +53,8 @@ use itertools::Itertools;
 use num::{integer::gcd, Signed};
 #[allow(unused)]
 use superslice::Ext;
+#[allow(unused)]
+use rand::Rng;
 #[allow(unused)]
 use ac_library::{
     FenwickTree
