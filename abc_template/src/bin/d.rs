@@ -3,7 +3,12 @@ fn main() {
 }
 
 // const MOD17: usize = 1000000007;
-// const MOD93: usize = 998244353;
+/*
+const MOD93: usize = 998244353;
+fn mod_add(a: usize, b: usize) -> usize { let ret1 = a % MOD93; let ret2 = b % MOD93; (ret1 + ret2) % MOD93 }
+fn mod_sub(a: usize, b: usize) -> usize { let ret1 = a % MOD93; let ret2 = b % MOD93; (ret1 + MOD93 - ret2) % MOD93 }
+fn mod_mul(a: usize, b: usize) -> usize { let ret1 = a % MOD93; let ret2 = b % MOD93; (ret1 * ret2) % MOD93 }
+*/
 // const INV2: usize = 499122177; // MOD93の剰余世界では、1/2の代わりにこれを掛ける
 // const INF: usize = 1 << 60;
 // const D: [Pos; 4] = [Pos{x:!0, y:0}, Pos{x:0, y:!0}, Pos{x:1, y:0}, Pos{x:0, y:1}]; // 上左下右
