@@ -4,5 +4,6 @@ if [ $# != 1 ]; then
 else
 	TODAY=`date +"%Y%m%d_%H%M"`
 	cp src/main.rs done/$1_$TODAY.rs
-	cp base_rs/atcoder.rs src/main.rs
+	# cp base_rs/atcoder.rs src/main.rs
+	cp base_rs/plain.rs src/main.rs
 fi
